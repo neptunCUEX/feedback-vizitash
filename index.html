@@ -506,9 +506,14 @@ input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.45);cursor:po
             <div class="cc"><span id="sCt">0</span>/280</div>
           </div>
           <div class="fld">
-            <label>Problemet kryesore të identifikuara</label>
-            <textarea placeholder="Çështje që kërkojnë vëmendje..." oninput="cc(this,'sCt2',400)"></textarea>
+            <label>Problemet kryesore të identifikuara <span class="req">*</span></label>
+            <textarea id="s-issues" placeholder="Çështje që kërkojnë vëmendje..." required oninput="cc(this,'sCt2',400)"></textarea>
             <div class="cc"><span id="sCt2">0</span>/400</div>
+          </div>
+          <div class="fld">
+            <label>Sugjerime nga Menaxheri i Dyqanit <span class="req">*</span></label>
+            <textarea id="s-manager-suggest" placeholder="Çfarë sugjeron menaxheri për përmirësim..." required oninput="cc(this,'sCt3',400)"></textarea>
+            <div class="cc"><span id="sCt3">0</span>/400</div>
           </div>
           <div class="fld">
             <label>Kërkohet ndjekje?</label>
@@ -949,8 +954,8 @@ function updProg(radios, reqIds, fillId) {
   document.getElementById(fillId).style.width = Math.min(100,Math.round(f/t*100))+'%';
 }
 
-document.getElementById('storeForm').addEventListener('input',  () => updProg(['sc','sl','ss','sg','sa','mp','mc','mpr','mo','stg','stk','sta','stu','stc'],['s-date','s-store','s-summary','s-rating'],'storeProgFill'));
-document.getElementById('storeForm').addEventListener('change', () => updProg(['sc','sl','ss','sg','sa','mp','mc','mpr','mo','stg','stk','sta','stu','stc'],['s-date','s-store','s-summary','s-rating'],'storeProgFill'));
+document.getElementById('storeForm').addEventListener('input',  () => updProg(['sc','sl','ss','sg','sa','mp','mc','mpr','mo','stg','stk','sta','stu','stc'],['s-date','s-store','s-summary','s-issues','s-manager-suggest','s-rating'],'storeProgFill'));
+document.getElementById('storeForm').addEventListener('change', () => updProg(['sc','sl','ss','sg','sa','mp','mc','mpr','mo','stg','stk','sta','stu','stc'],['s-date','s-store','s-summary','s-issues','s-manager-suggest','s-rating'],'storeProgFill'));
 document.getElementById('empForm').addEventListener('input',    () => updProg(['eg','ek','es','ea','eu','et','ec'],['e-date','e-store','e-name','e-strengths','e-rating'],'empProgFill'));
 document.getElementById('empForm').addEventListener('change',   () => updProg(['eg','ek','es','ea','eu','et','ec'],['e-date','e-store','e-name','e-strengths','e-rating'],'empProgFill'));
 
@@ -967,7 +972,7 @@ document.getElementById('empForm').addEventListener('change',   () => updProg(['
 //   https://prod-xx.westeurope.logic.azure.com/workflows/...
 //
 // ══════════════════════════════════════════
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzVb-e7SbXFBhYFDTgiLHgiFq-7pnPnKEiyku28_pbj-THSvkzYP7jjzguJ5DUU4C2-zg/exec';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwcaGeorG9goqmch8B3X9I_A9ShT-_KCyugJuuxz0xygnt-VE3L4IdVI8Q-l7j4K_EQEw/exec';
 
 async function sendToSheet(payload, tab) {
   if (!SHEET_URL || SHEET_URL.includes('PASTE_YOUR')) {
@@ -1083,7 +1088,8 @@ document.getElementById('storeForm').addEventListener('submit', async function(e
     'Staff Score (avg)':           staffAvg ?? '',
     // ── Notes ──
     'Përmbledhje':                 document.getElementById('s-summary').value,
-    'Problemet kryesore':          document.querySelector('#storeForm textarea:not(#s-summary)') ? document.querySelector('#storeForm textarea:not(#s-summary)').value : '',
+    'Problemet kryesore':          document.getElementById('s-issues') ? document.getElementById('s-issues').value : '',
+    'Sugjerime Menaxherit':        document.getElementById('s-manager-suggest') ? document.getElementById('s-manager-suggest').value : '',
     'Kërkohet ndjekje':            getTogVal('followup','Kërkohet'),
     'Overall Rating':              parseFloat(document.getElementById('s-rating').value) || '',
     // ── Employee columns blank for store rows ──
@@ -1156,7 +1162,7 @@ document.getElementById('empForm').addEventListener('submit', async function(e) 
     'Menaxheri i dukshëm':'',
     'ST1 Përshëndetja':'', 'ST2 Njohuria produkteve':'', 'ST3 Profesionalizmi':'',
     'ST4 Uniforma':'', 'ST5 Ankesat':'', 'Staff Score':'',
-    'Përmbledhje':'', 'Problemet kryesore':'', 'Kërkohet ndjekje':''
+    'Përmbledhje':'', 'Problemet kryesore':'', 'Sugjerime Menaxherit':'', 'Kërkohet ndjekje':''
   };
 
   empData.push({
@@ -1184,7 +1190,7 @@ function resetStore() {
   ['sp-Neptun','sp-Franchise','sp-Nova'].forEach(id=>document.getElementById(id).className='pill');
   document.getElementById('s-type').value='';
   document.getElementById('s-store').innerHTML='<option value="" disabled selected>Zgjidhni fillimisht llojin e dyqanit</option>';
-  document.getElementById('sCt').textContent='0'; document.getElementById('sCt2').textContent='0';
+  document.getElementById('sCt').textContent='0'; document.getElementById('sCt2').textContent='0'; document.getElementById('sCt3').textContent='0';
   setToday(); window.scrollTo({top:0,behavior:'smooth'});
 }
 function resetEmp() {

@@ -511,8 +511,8 @@ input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.45);cursor:po
             <div class="cc"><span id="sCt2">0</span>/400</div>
           </div>
           <div class="fld">
-            <label>Sugjerime nga Menaxheri i Dyqanit <span class="req">*</span></label>
-            <textarea id="s-manager-suggest" placeholder="Çfarë sugjeron menaxheri për përmirësim..." required oninput="cc(this,'sCt3',400)"></textarea>
+            <label>Komente nga Menaxheri <span class="req">*</span></label>
+            <textarea id="s-manager-suggest" placeholder="Komentet e menaxherit të dyqanit..." required oninput="cc(this,'sCt3',400)"></textarea>
             <div class="cc"><span id="sCt3">0</span>/400</div>
           </div>
           <div class="fld">
@@ -1089,7 +1089,7 @@ document.getElementById('storeForm').addEventListener('submit', async function(e
     // ── Notes ──
     'Përmbledhje':                 document.getElementById('s-summary').value,
     'Problemet kryesore':          document.getElementById('s-issues') ? document.getElementById('s-issues').value : '',
-    'Sugjerime Menaxherit':        document.getElementById('s-manager-suggest') ? document.getElementById('s-manager-suggest').value : '',
+    'Komente nga Menaxheri':        document.getElementById('s-manager-suggest') ? document.getElementById('s-manager-suggest').value : '',
     'Kërkohet ndjekje':            getTogVal('followup','Kërkohet'),
     'Overall Rating':              parseFloat(document.getElementById('s-rating').value) || '',
     // ── Employee columns blank for store rows ──
@@ -1162,7 +1162,7 @@ document.getElementById('empForm').addEventListener('submit', async function(e) 
     'Menaxheri i dukshëm':'',
     'ST1 Përshëndetja':'', 'ST2 Njohuria produkteve':'', 'ST3 Profesionalizmi':'',
     'ST4 Uniforma':'', 'ST5 Ankesat':'', 'Staff Score':'',
-    'Përmbledhje':'', 'Problemet kryesore':'', 'Sugjerime Menaxherit':'', 'Kërkohet ndjekje':''
+    'Përmbledhje':'', 'Problemet kryesore':'', 'Komente nga Menaxheri':'', 'Kërkohet ndjekje':''
   };
 
   empData.push({

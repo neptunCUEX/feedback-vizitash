@@ -916,22 +916,34 @@ document.getElementById('empForm').addEventListener('change',   () => updProg(['
 // ── STORE SUBMIT ──
 // ══════════════════════════════════════════
 // SHEETMONKEY ENDPOINT
-// Replace the URL below with your SheetMonkey form URL.
-// Both store and employee submissions go to the SAME sheet.
-// A "Form Type" column tells them apart.
 // ══════════════════════════════════════════
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxhisespEwQY9ArLs5xJGPjGQWx43vu87EpAJj9fT24P-T41tW05SEn9JoCIHFDJuEMWQ/exec';
+// DESTINATION — paste your URL below.
+//
+// OPTION A — Google Sheets (Apps Script Web App URL):
+//   https://script.google.com/macros/s/YOUR_ID/exec
+//
+// OPTION B — OneDrive Excel (Power Automate HTTP trigger URL):
+//   https://prod-xx.westeurope.logic.azure.com/workflows/...
+//
+// ══════════════════════════════════════════
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwDVJL86OixQGYQMTyiGohRIge4SV9ZB-Na8SNVkpfDQ1zuSSZ3ahXTGfhGb_gXyNGp5Q/exec';
 
 async function sendToSheet(payload) {
-  if (!SHEET_URL || SHEET_URL.includes('PASTE_YOUR')) return; // skip if not configured
+  if (!SHEET_URL || SHEET_URL.includes('PASTE_YOUR')) {
+    console.warn('No destination URL set.');
+    return;
+  }
   try {
-    await fetch(SHEET_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+    // Encode as URL params — works with Apps Script and avoids CORS preflight
+    const params = new URLSearchParams();
+    Object.entries(payload).forEach(([k,v]) => params.append(k, v ?? ''));
+    await fetch(SHEET_URL + '?' + params.toString(), {
+      method: 'GET',
+      mode: 'no-cors'
     });
+    console.log('Data sent.');
   } catch(err) {
-    console.warn('Sheet send failed:', err);
+    console.warn('Send failed:', err);
   }
 }
 

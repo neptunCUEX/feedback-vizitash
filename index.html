@@ -273,6 +273,41 @@ tr:hover td{background:rgba(255,255,255,.015);}
 .sec:nth-child(4){animation:fUp .4s .16s ease both}
 .sec:nth-child(5){animation:fUp .4s .20s ease both}
 input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.45);cursor:pointer;}
+
+/* ── PDF PRINT STYLES ── */
+.btn-pdf{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;
+  background:transparent;color:var(--a4);font-family:'Syne',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  border:1px solid var(--a4);border-radius:7px;cursor:pointer;transition:all .2s;margin-left:10px;}
+.btn-pdf:hover{background:rgba(180,127,255,.1);}
+
+@media print {
+  body{background:#fff !important;color:#111 !important;}
+  .login-screen,.app-nav,.prog-bar,.sub-w,.suc,.page:not(.act){display:none !important;}
+  .page.act{display:block !important;padding:0 !important;}
+  .sec{background:#fff !important;border:1px solid #ddd !important;border-radius:6px;
+    page-break-inside:avoid;margin-bottom:10px;}
+  .sec-title{color:#333 !important;}
+  .rat-lbl{color:#111 !important;}
+  .stars label{color:#ccc !important;}
+  .stars input:checked ~ label{color:#f59e0b !important;}
+  .na-lbl{border:1px solid #ccc;color:#666 !important;}
+  .tog-b{border:1px solid #ccc;color:#999 !important;font-size:11px;}
+  .t-y{background:#e6ffe6 !important;border-color:#4caf50 !important;color:#2e7d32 !important;}
+  .t-n{background:#ffe6e6 !important;border-color:#f44336 !important;color:#c62828 !important;}
+  input,select,textarea{background:#f9f9f9 !important;border:1px solid #ddd !important;color:#111 !important;}
+  h1,h2{color:#111 !important;}
+  .tag{background:#111 !important;color:#fff !important;}
+  .tag-blue{background:#0077aa !important;}
+  .muted,.sub{color:#555 !important;}
+  .pdf-header{display:block !important;}
+  .btn-pdf,.btn-rst,.nav-logout{display:none !important;}
+  @page{margin:15mm;}
+}
+.pdf-header{display:none;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #eee;}
+.pdf-header h3{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:#111;}
+.pdf-header p{font-size:12px;color:#666;margin-top:3px;}
+
 </style>
 </head>
 <body>
@@ -503,7 +538,10 @@ input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.45);cursor:po
         <div class="suc-ic">✓</div>
         <h2>Raporti i Dyqanit u Dërgua</h2>
         <p>Feedback-u i vizitës u regjistrua me sukses.</p>
-        <button class="btn-rst" onclick="resetStore()">Dërgo Tjetër</button>
+        <div style="margin-top:14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+          <button class="btn-rst" onclick="resetStore()">Dërgo Tjetër</button>
+          <button class="btn-pdf" onclick="printReport('store')">⬇ Shkarko PDF</button>
+        </div>
       </div>
     </div>
   </div>
@@ -638,7 +676,10 @@ input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.45);cursor:po
         <div class="suc-ic emp-suc-ic">✓</div>
         <h2>Vlerësimi i Punonjësit u Dërgua</h2>
         <p>Feedback-u u regjistrua me sukses.</p>
-        <button class="btn-rst emp-btn-rst" onclick="resetEmp()">Vlerëso Punonjës Tjetër</button>
+        <div style="margin-top:14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+          <button class="btn-rst emp-btn-rst" onclick="resetEmp()">Vlerëso Punonjës Tjetër</button>
+          <button class="btn-pdf" onclick="printReport('employee')">⬇ Shkarko PDF</button>
+        </div>
       </div>
     </div>
   </div>
@@ -926,25 +967,70 @@ document.getElementById('empForm').addEventListener('change',   () => updProg(['
 //   https://prod-xx.westeurope.logic.azure.com/workflows/...
 //
 // ══════════════════════════════════════════
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyFQOP7K8UkzmsIVCBEgnz82yErzT0Xpwycv0dGe0TKzYxYIqmYSkyUOgCQHzZ6B0XTrQ/exec';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyKlHu6hAFsFNQE67FNzW7IUtWHH9wtJmvR7FJvlRMAkgU_0yV0JrFCRPVmknTNITdlAA/exec';
 
-async function sendToSheet(payload) {
+async function sendToSheet(payload, tab) {
   if (!SHEET_URL || SHEET_URL.includes('PASTE_YOUR')) {
     console.warn('No destination URL set.');
     return;
   }
   try {
-    // Encode as URL params — works with Apps Script and avoids CORS preflight
     const params = new URLSearchParams();
+    // Pass which tab to write to: 'Vizitat e Dyqaneve' or 'Vlerësimet e Punonjësve'
+    params.append('tab', tab || 'Sheet1');
     Object.entries(payload).forEach(([k,v]) => params.append(k, v ?? ''));
     await fetch(SHEET_URL + '?' + params.toString(), {
       method: 'GET',
       mode: 'no-cors'
     });
-    console.log('Data sent.');
+    console.log('Data sent to tab:', tab);
   } catch(err) {
     console.warn('Send failed:', err);
   }
+}
+
+// ── PDF PRINT ──
+function printReport(type) {
+  // Show the form (hidden after submit) for printing, hide success screen
+  const formId   = type === 'store' ? 'storeForm' : 'empForm';
+  const sucId    = type === 'store' ? 'storeSuc'  : 'empSuc';
+  const pageId   = type === 'store' ? 'pageStore' : 'pageEmployee';
+  const form     = document.getElementById(formId);
+  const suc      = document.getElementById(sucId);
+  const page     = document.getElementById(pageId);
+
+  // Build a print header with key info
+  const storeName = type === 'store'
+    ? document.getElementById('s-store').value
+    : document.getElementById('e-store').value;
+  const dateVal = type === 'store'
+    ? document.getElementById('s-date').value
+    : document.getElementById('e-date').value;
+  const empName = type === 'employee' ? document.getElementById('e-name').value : '';
+
+  // Insert or update print header
+  let hdr = document.getElementById('pdfPrintHeader');
+  if (!hdr) {
+    hdr = document.createElement('div');
+    hdr.id = 'pdfPrintHeader';
+    hdr.className = 'pdf-header';
+    page.querySelector('.wrap').prepend(hdr);
+  }
+  hdr.innerHTML = `
+    <h3>${type === 'store' ? 'Raport Vizite Dyqani' : 'Vlerësim Punonjësi'}</h3>
+    <p>${storeName} &nbsp;|&nbsp; ${dateVal} &nbsp;|&nbsp; ${cur.name}${empName ? ' &nbsp;|&nbsp; ' + empName : ''}</p>`;
+
+  // Temporarily show the form for print
+  form.style.display = 'block';
+  suc.style.display  = 'none';
+
+  window.print();
+
+  // Restore after print dialog closes
+  setTimeout(() => {
+    form.style.display = 'none';
+    suc.style.display  = 'block';
+  }, 500);
 }
 
 // ── STORE SUBMIT ──
@@ -953,32 +1039,68 @@ document.getElementById('storeForm').addEventListener('submit', async function(e
   const btn = this.querySelector('.btn-sub');
   btn.textContent = 'Duke ruajtur…'; btn.disabled = true;
 
+  // Helper: get selected toggle label text
+  function getTogVal(section, label) {
+    const grp = Array.from(document.querySelectorAll('#storeForm .fld')).find(f => f.querySelector('label') && f.querySelector('label').textContent.trim().startsWith(label));
+    if (!grp) return '';
+    const active = grp.querySelector('.tog-b.t-y, .tog-b.t-n');
+    return active ? active.textContent.trim() : '';
+  }
+
+  const storeAvg = avg([getR('sc'),getR('sl'),getR('ss'),getR('sg'),getR('sa')]);
+  const mgmtAvg  = avg([getR('mp'),getR('mc'),getR('mpr'),getR('mo')]);
+  const staffAvg = avg([getR('stg'),getR('stk'),getR('sta'),getR('stu'),getR('stc')]);
+
   const row = {
-    'Form Type':      'Store Visit',
-    'Date':           document.getElementById('s-date').value,
-    'Time':           document.getElementById('s-time').value,
-    'Store Type':     document.getElementById('s-type').value,
-    'Store Name':     document.getElementById('s-store').value,
-    'Reviewer':       cur.name,
-    'Store Score':    avg([getR('sc'),getR('sl'),getR('ss'),getR('sg'),getR('sa')]) ?? '',
-    'Mgmt Score':     avg([getR('mp'),getR('mc'),getR('mpr'),getR('mo')]) ?? '',
-    'Staff Score':    avg([getR('stg'),getR('stk'),getR('sta'),getR('stu'),getR('stc')]) ?? '',
-    'Overall Rating': parseFloat(document.getElementById('s-rating').value) || '',
-    'Summary':        document.getElementById('s-summary').value,
-    // Employee columns left blank for store rows
-    'Employee Name':  '',
-    'Work Position':  '',
-    'Perf Score':     ''
+    // ── Identity ──
+    'Form Type':        'Store Visit',
+    'Date':             document.getElementById('s-date').value,
+    'Time':             document.getElementById('s-time').value,
+    'Store Type':       document.getElementById('s-type').value,
+    'Store Name':       document.getElementById('s-store').value,
+    'Reviewer':         cur.name,
+    // ── Store ratings (individual) ──
+    'S1 Pastërtia':               getR('sc') ?? '',
+    'S2 Ekspozimi':                getR('sl') ?? '',
+    'S3 Stoku':                    getR('ss') ?? '',
+    'S4 Sinjalistika':             getR('sg') ?? '',
+    'S5 Atmosfera':                getR('sa') ?? '',
+    'Store Score (avg)':           storeAvg ?? '',
+    'Materialet promovuese':       getTogVal('store','Materialet'),
+    // ── Management ratings (individual) ──
+    'M1 Prania':                   getR('mp') ?? '',
+    'M2 Komunikimi':               getR('mc') ?? '',
+    'M3 Vendimmarrja':             getR('mpr') ?? '',
+    'M4 Organizimi':               getR('mo') ?? '',
+    'Mgmt Score (avg)':            mgmtAvg ?? '',
+    'Menaxheri i dukshëm':         getTogVal('mgmt','Menaxheri'),
+    // ── Staff ratings (individual) ──
+    'ST1 Përshëndetja':            getR('stg') ?? '',
+    'ST2 Njohuria produkteve':     getR('stk') ?? '',
+    'ST3 Profesionalizmi':         getR('sta') ?? '',
+    'ST4 Uniforma':                getR('stu') ?? '',
+    'ST5 Ankesat':                 getR('stc') ?? '',
+    'Staff Score (avg)':           staffAvg ?? '',
+    // ── Notes ──
+    'Përmbledhje':                 document.getElementById('s-summary').value,
+    'Problemet kryesore':          document.querySelector('#storeForm textarea:not(#s-summary)') ? document.querySelector('#storeForm textarea:not(#s-summary)').value : '',
+    'Kërkohet ndjekje':            getTogVal('followup','Kërkohet'),
+    'Overall Rating':              parseFloat(document.getElementById('s-rating').value) || '',
+    // ── Employee columns blank for store rows ──
+    'Employee Name': '', 'Work Position': '', 'Perf Score': '',
+    'E1 Përshëndetja':'', 'E2 Njohuritë':'', 'E3 Shitja':'',
+    'E4 Profesionalizmi':'', 'E5 Uniforma':'', 'E6 Puna në grup':'', 'E7 Ankesat':'',
+    'Pikat e forta': '', 'Fushat për përmirësim': '', 'I vetëdijshëm': ''
   };
 
   storeData.push({
     date: row['Date'], type: row['Store Type'], store: row['Store Name'],
-    reviewer: row['Reviewer'], storeScore: row['Store Score'],
-    mgmtScore: row['Mgmt Score'], staffScore: row['Staff Score'],
-    overall: row['Overall Rating'], summary: row['Summary']
+    reviewer: row['Reviewer'], storeScore: storeAvg,
+    mgmtScore: mgmtAvg, staffScore: staffAvg,
+    overall: row['Overall Rating'], summary: row['Përmbledhje']
   });
 
-  await sendToSheet(row);
+  await sendToSheet(row, 'Vizitat e Dyqaneve');
 
   btn.textContent = 'Dërgo Raportin e Dyqanit →'; btn.disabled = false;
   document.getElementById('storeForm').style.display='none';
@@ -993,32 +1115,58 @@ document.getElementById('empForm').addEventListener('submit', async function(e) 
   const btn = this.querySelector('.btn-sub');
   btn.textContent = 'Duke ruajtur…'; btn.disabled = true;
 
+  function getEmpTogVal(labelStart) {
+    const grp = Array.from(document.querySelectorAll('#empForm .fld')).find(f => f.querySelector('label') && f.querySelector('label').textContent.trim().startsWith(labelStart));
+    if (!grp) return '';
+    const active = grp.querySelector('.tog-b.t-y, .tog-b.t-n');
+    return active ? active.textContent.trim() : '';
+  }
+
+  const perfAvg = avg([getR('eg'),getR('ek'),getR('es'),getR('ea'),getR('eu'),getR('et'),getR('ec')]);
+
   const row = {
-    'Form Type':      'Employee Review',
-    'Date':           document.getElementById('e-date').value,
-    'Time':           document.getElementById('e-time').value,
-    'Store Type':     document.getElementById('e-type').value,
-    'Store Name':     document.getElementById('e-store').value,
-    'Reviewer':       cur.name,
-    'Employee Name':  document.getElementById('e-name').value.trim(),
-    'Work Position':  document.getElementById('e-role').value,
-    'Perf Score':     avg([getR('eg'),getR('ek'),getR('es'),getR('ea'),getR('eu'),getR('et'),getR('ec')]) ?? '',
-    'Overall Rating': parseFloat(document.getElementById('e-rating').value) || '',
-    'Summary':        document.getElementById('e-strengths').value,
-    // Store-specific columns left blank for employee rows
-    'Store Score':    '',
-    'Mgmt Score':     '',
-    'Staff Score':    ''
+    // ── Identity ──
+    'Form Type':        'Employee Review',
+    'Date':             document.getElementById('e-date').value,
+    'Time':             document.getElementById('e-time').value,
+    'Store Type':       document.getElementById('e-type').value,
+    'Store Name':       document.getElementById('e-store').value,
+    'Reviewer':         cur.name,
+    'Employee Name':    document.getElementById('e-name').value.trim(),
+    'Work Position':    document.getElementById('e-role').value,
+    // ── Performance ratings (individual) ──
+    'E1 Përshëndetja':  getR('eg') ?? '',
+    'E2 Njohuritë':     getR('ek') ?? '',
+    'E3 Shitja':        getR('es') ?? '',
+    'E4 Profesionalizmi': getR('ea') ?? '',
+    'E5 Uniforma':      getR('eu') ?? '',
+    'E6 Puna në grup':  getR('et') ?? '',
+    'E7 Ankesat':       getR('ec') ?? '',
+    'Perf Score':       perfAvg ?? '',
+    'Overall Rating':   parseFloat(document.getElementById('e-rating').value) || '',
+    // ── Notes ──
+    'Pikat e forta':           document.getElementById('e-strengths').value,
+    'Fushat për përmirësim':   document.querySelector('#empForm textarea:not(#e-strengths)') ? document.querySelector('#empForm textarea:not(#e-strengths)').value : '',
+    'I vetëdijshëm':           getEmpTogVal('A ishte'),
+    // ── Store columns blank for employee rows ──
+    'Store Score (avg)': '', 'Mgmt Score (avg)': '', 'Staff Score (avg)': '',
+    'S1 Pastërtia':'', 'S2 Ekspozimi':'', 'S3 Stoku':'', 'S4 Sinjalistika':'', 'S5 Atmosfera':'',
+    'Materialet promovuese':'',
+    'M1 Prania':'', 'M2 Komunikimi':'', 'M3 Vendimmarrja':'', 'M4 Organizimi':'',
+    'Menaxheri i dukshëm':'',
+    'ST1 Përshëndetja':'', 'ST2 Njohuria produkteve':'', 'ST3 Profesionalizmi':'',
+    'ST4 Uniforma':'', 'ST5 Ankesat':'', 'Staff Score':'',
+    'Përmbledhje':'', 'Problemet kryesore':'', 'Kërkohet ndjekje':''
   };
 
   empData.push({
     date: row['Date'], type: row['Store Type'], store: row['Store Name'],
     reviewer: row['Reviewer'], employee: row['Employee Name'],
-    role: row['Work Position'], score: row['Perf Score'],
-    overall: row['Overall Rating'], strengths: row['Summary']
+    role: row['Work Position'], score: perfAvg,
+    overall: row['Overall Rating'], strengths: row['Pikat e forta']
   });
 
-  await sendToSheet(row);
+  await sendToSheet(row, 'Vlerësimet e Punonjësve');
 
   btn.textContent = 'Dërgo Vlerësimin e Punonjësit →'; btn.disabled = false;
   document.getElementById('empForm').style.display='none';

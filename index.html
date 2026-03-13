@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistemi i Feedback-ut të Vizitave</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0d0d0f; --surface:#16161a; --s2:#1e1e24; --s3:#242430;
+  --border:#2a2a35; --b2:#353545;
+  --accent:#e8ff47; --a2:#47c8ff; --a3:#ff6b6b; --a4:#b47fff; --a5:#47ffb2;
+  --text:#f0f0f5; --muted:#7a7a90; --muted2:#5a5a70;
+  --r:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;
+  background-image:radial-gradient(ellipse at 15% 0%,rgba(232,255,71,.05) 0%,transparent 55%),
+  radial-gradient(ellipse at 85% 100%,rgba(71,200,255,.04) 0%,transparent 55%);}
+
+/* ── TYPOGRAPHY ── */
+.f-syne{font-family:'Syne',sans-serif;}
+h1{font-family:'Syne',sans-serif;font-size:clamp(22px,4vw,34px);font-weight:800;line-height:1.1;letter-spacing:-.02em;}
+h1 .hi{color:var(--accent);}
+h2{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;}
+.tag{display:inline-block;background:var(--accent);color:#0d0d0f;font-family:'Syne',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;padding:4px 10px;border-radius:4px;}
+.tag-blue{background:var(--a2);}
+.tag-purple{background:var(--a4);}
+.sub{color:var(--muted);font-size:13px;line-height:1.65;}
+
+/* ── LOGIN ── */
+.login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+.login-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:36px 32px;width:100%;max-width:360px;animation:fUp .5s ease both;}
+.login-card .tag{margin-bottom:20px;}
+.login-card h2{margin-bottom:6px;}
+.login-card .sub{margin-bottom:26px;}
+
+.rev-btn{width:100%;display:flex;align-items:center;gap:12px;padding:13px 14px;
+  background:var(--s2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;
+  transition:all .2s;margin-bottom:9px;text-align:left;}
+.rev-btn:hover{border-color:var(--accent);background:rgba(232,255,71,.04);}
+.av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:12px;font-weight:700;flex-shrink:0;}
+.av-a{background:rgba(232,255,71,.18);color:var(--accent);}
+.av-g{background:rgba(71,200,255,.18);color:var(--a2);}
+.av-sm{width:28px;height:28px;font-size:10px;}
+.ri{flex:1;} .rn{font-weight:600;font-size:14px;} .rr{font-size:11px;color:var(--muted);margin-top:1px;}
+
+/* PIN FORM SELECTOR */
+.pin-form-sel{display:flex;gap:8px;margin-bottom:18px;}
+.form-pill{flex:1;padding:9px 8px;border-radius:8px;border:1px solid var(--border);background:var(--s2);
+  color:var(--muted);font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:.05em;
+  text-transform:uppercase;cursor:pointer;transition:all .2s;text-align:center;}
+.form-pill:hover{border-color:var(--b2);color:var(--text);}
+.form-pill.fp-store{background:rgba(232,255,71,.1);border-color:var(--accent);color:var(--accent);}
+.form-pill.fp-emp{background:rgba(71,200,255,.1);border-color:var(--a2);color:var(--a2);}
+
+.pin-screen{display:none;}
+.pin-back{background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;
+  cursor:pointer;padding:0;margin-bottom:16px;display:flex;align-items:center;gap:5px;transition:color .2s;}
+.pin-back:hover{color:var(--text);}
+.pin-who{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
+.pin-who-name{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;}
+.pin-who-sub{font-size:12px;color:var(--muted);}
+.pin-form-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  padding:2px 8px;border-radius:4px;font-family:'Syne',sans-serif;margin-top:4px;}
+.pfb-store{background:rgba(232,255,71,.12);color:var(--accent);}
+.pfb-emp{background:rgba(71,200,255,.12);color:var(--a2);}
+.pin-wrap{display:flex;gap:9px;margin:16px 0;justify-content:center;}
+.pin-d{width:52px;height:54px;background:var(--s2);border:1px solid var(--border);border-radius:9px;
+  text-align:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--text);
+  outline:none;transition:border-color .2s,box-shadow .2s;caret-color:var(--accent);}
+.pin-d:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,255,71,.08);}
+.pin-err{color:var(--a3);font-size:12px;text-align:center;min-height:16px;margin-bottom:10px;}
+.pin-lock{color:var(--a3);font-size:12px;text-align:center;margin-bottom:10px;padding:8px;
+  background:rgba(255,107,107,.08);border-radius:6px;border:1px solid rgba(255,107,107,.2);}
+.btn-pin{width:100%;padding:13px;background:var(--accent);color:#0d0d0f;font-family:'Syne',sans-serif;
+  font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border:none;
+  border-radius:9px;cursor:pointer;transition:all .2s;}
+.btn-pin:hover{box-shadow:0 6px 20px rgba(232,255,71,.28);}
+.btn-pin:disabled{opacity:.4;cursor:not-allowed;}
+
+/* ── NAV ── */
+.app-nav{display:flex;align-items:center;gap:5px;padding:10px 18px;border-bottom:1px solid var(--border);
+  background:rgba(13,13,15,.94);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;}
+.nav-logo{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+  background:var(--accent);color:#0d0d0f;padding:4px 9px;border-radius:4px;margin-right:8px;}
+.nb{background:none;border:1px solid transparent;border-radius:7px;color:var(--muted);
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:6px 11px;cursor:pointer;transition:all .2s;}
+.nb:hover{color:var(--text);border-color:var(--border);}
+.nb.act{color:var(--accent);border-color:rgba(232,255,71,.3);background:rgba(232,255,71,.07);}
+.nb.act-emp{color:var(--a2);border-color:rgba(71,200,255,.3);background:rgba(71,200,255,.07);}
+.nb.act-rpt{color:var(--a4);border-color:rgba(180,127,255,.3);background:rgba(180,127,255,.07);}
+.nav-sp{flex:1;}
+.nav-user{display:flex;align-items:center;gap:7px;}
+.nav-name{font-size:12px;color:var(--muted);}
+.nav-form-badge{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  padding:2px 7px;border-radius:4px;font-family:'Syne',sans-serif;}
+.nav-logout{background:none;border:1px solid var(--border);border-radius:6px;color:var(--muted);
+  font-size:11px;font-family:'DM Sans',sans-serif;padding:3px 9px;cursor:pointer;transition:all .2s;margin-left:2px;}
+.nav-logout:hover{color:var(--a3);border-color:var(--a3);}
+
+/* ── PAGES ── */
+.page{display:none;padding:28px 18px;}
+.page.act{display:block;}
+.wrap{max-width:680px;margin:0 auto;}
+.wrap-wide{max-width:1020px;margin:0 auto;}
+
+/* ── FORM COMMON ── */
+.pg-hdr{margin-bottom:24px;animation:fDown .5s ease both;}
+.pg-hdr .tag{margin-bottom:13px;}
+.pg-hdr .sub{margin-top:7px;}
+.prog-bar{height:2px;background:var(--border);border-radius:2px;margin-bottom:24px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .4s ease;width:0%;}
+.prog-fill.emp-fill{background:var(--a2);}
+
+.sec{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:20px;margin-bottom:12px;transition:border-color .2s;}
+.sec:hover{border-color:var(--b2);}
+.sec-hdr{display:flex;align-items:center;gap:9px;margin-bottom:16px;}
+.sec-ic{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.si-info{background:rgba(232,255,71,.12);} .si-store{background:rgba(71,200,255,.12);}
+.si-mgmt{background:rgba(255,107,107,.12);} .si-staff{background:rgba(147,112,219,.12);}
+.si-notes{background:rgba(255,180,71,.12);} .si-emp{background:rgba(71,255,178,.12);}
+.si-perf{background:rgba(71,200,255,.12);}
+.sec-title{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);}
+
+.fld{margin-bottom:15px;} .fld:last-child{margin-bottom:0;}
+label{display:block;font-size:11px;font-weight:500;color:var(--muted);margin-bottom:5px;letter-spacing:.01em;}
+.req{color:var(--accent);margin-left:2px;}
+input[type=text],input[type=date],select,textarea{
+  width:100%;background:var(--s2);border:1px solid var(--border);border-radius:7px;
+  color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:9px 11px;
+  outline:none;transition:border-color .2s,box-shadow .2s;appearance:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,255,71,.07);}
+.emp-form input:focus,.emp-form select:focus,.emp-form textarea:focus{border-color:var(--a2);box-shadow:0 0 0 3px rgba(71,200,255,.07);}
+textarea{resize:vertical;min-height:72px;line-height:1.6;}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%237a7a90' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 11px center;padding-right:30px;cursor:pointer;}
+select option{background:var(--s2);}
+
+/* pills */
+.pills{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:7px;}
+.pill{padding:5px 13px;border-radius:20px;border:1px solid var(--border);background:var(--s2);
+  color:var(--muted);font-size:11px;font-weight:600;font-family:'Syne',sans-serif;cursor:pointer;transition:all .2s;}
+.pill:hover{border-color:var(--b2);color:var(--text);}
+.pill.p-n{background:rgba(232,255,71,.1);border-color:var(--accent);color:var(--accent);}
+.pill.p-f{background:rgba(71,200,255,.1);border-color:var(--a2);color:var(--a2);}
+.pill.p-v{background:rgba(180,127,255,.1);border-color:var(--a4);color:var(--a4);}
+
+/* stars */
+.rat-g{display:flex;flex-direction:column;gap:8px;}
+.rat-r{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:8px 11px;background:var(--s2);border-radius:7px;border:1px solid var(--border);}
+.rat-lbl{font-size:12px;color:var(--text);flex:1;}
+.stars{display:flex;gap:2px;flex-shrink:0;flex-direction:row-reverse;}
+.stars input{display:none;}
+.stars label{font-size:18px;color:var(--border);cursor:pointer;margin:0;transition:color .12s;line-height:1;}
+.stars label:hover,.stars label:hover~label{color:var(--accent) !important;}
+.stars input:checked~label{color:var(--accent) !important;}
+.na-lbl{font-size:11px;font-weight:600;font-family:'Syne',sans-serif;color:var(--muted);
+  cursor:pointer;padding:3px 7px;border-radius:5px;border:1px solid var(--border);
+  background:var(--s2);transition:all .2s;white-space:nowrap;margin-left:4px;}
+.na-lbl:hover{color:var(--text);border-color:var(--b2);}
+.na-lbl.na-on{background:rgba(122,122,144,.15);border-color:var(--muted);color:var(--text);}
+.emp-form .stars label:hover,.emp-form .stars label:hover~label{color:var(--a2) !important;}
+.emp-form .stars input:checked~label{color:var(--a2) !important;}
+
+/* toggles */
+.tog-g{display:flex;gap:7px;}
+.tog-b{flex:1;padding:7px;border-radius:6px;border:1px solid var(--border);background:var(--s2);
+  color:var(--muted);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;text-align:center;}
+.tog-b:hover{border-color:var(--b2);color:var(--text);}
+.t-y{background:rgba(232,255,71,.1);border-color:var(--accent);color:var(--accent);}
+.t-n{background:rgba(255,107,107,.1);border-color:var(--a3);color:var(--a3);}
+
+/* submit */
+.sub-w{margin-top:22px;}
+.btn-sub{width:100%;padding:13px;background:var(--accent);color:#0d0d0f;font-family:'Syne',sans-serif;
+  font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border:none;
+  border-radius:var(--r);cursor:pointer;transition:transform .15s,box-shadow .15s;}
+.btn-sub:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(232,255,71,.25);}
+.btn-sub.emp-btn{background:var(--a2);}
+.btn-sub.emp-btn:hover{box-shadow:0 8px 22px rgba(71,200,255,.25);}
+
+/* success */
+.suc{display:none;text-align:center;padding:50px 20px;animation:fUp .5s ease both;}
+.suc-ic{width:60px;height:60px;background:rgba(232,255,71,.1);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px;border:2px solid var(--accent);}
+.suc-ic.emp-suc-ic{background:rgba(71,200,255,.1);border-color:var(--a2);}
+.suc h2{margin-bottom:8px;} .suc p{color:var(--muted);font-size:13px;margin-bottom:22px;}
+.btn-rst{padding:9px 20px;background:transparent;color:var(--accent);font-family:'Syne',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  border:1px solid var(--accent);border-radius:7px;cursor:pointer;transition:all .2s;}
+.btn-rst:hover{background:rgba(232,255,71,.08);}
+.btn-rst.emp-btn-rst{color:var(--a2);border-color:var(--a2);}
+.btn-rst.emp-btn-rst:hover{background:rgba(71,200,255,.08);}
+
+/* layout */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:460px){.g2{grid-template-columns:1fr;}}
+.div{height:1px;background:var(--border);margin:13px 0;}
+.cc{text-align:right;font-size:10px;color:var(--muted);margin-top:3px;}
+
+/* ── REPORTS ── */
+.rpt-hdr{margin-bottom:20px;}
+.rpt-hdr h2{margin-bottom:4px;} .rpt-hdr .sub{font-size:12px;}
+.rpt-filt{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.fs{background:var(--surface);border:1px solid var(--border);border-radius:7px;color:var(--text);
+  font-family:'DM Sans',sans-serif;font-size:12px;padding:7px 26px 7px 10px;outline:none;cursor:pointer;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9' fill='%237a7a90' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 8px center;transition:border-color .2s;}
+.fs:focus{border-color:var(--accent);}
+.fs option{background:var(--s2);}
+
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin-bottom:18px;}
+.sc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;}
+.sl{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.sv{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;line-height:1;}
+.ss{font-size:10px;color:var(--muted);margin-top:3px;}
+.sc-n{border-left:2px solid var(--accent);}  .sc-f{border-left:2px solid var(--a2);}
+.sc-v{border-left:2px solid var(--a4);}      .sc-t{border-left:2px solid #555;}
+.sc-e{border-left:2px solid var(--a5);}
+
+.tw{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:16px;}
+.tt{padding:11px 15px;border-bottom:1px solid var(--border);font-family:'Syne',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+  display:flex;align-items:center;justify-content:space-between;}
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--muted);padding:8px 12px;border-bottom:1px solid var(--border);background:var(--s2);}
+td{padding:8px 12px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,.015);}
+.sw{display:flex;align-items:center;gap:6px;}
+.sb{height:4px;border-radius:2px;flex:1;background:var(--border);overflow:hidden;min-width:40px;}
+.sf{height:100%;border-radius:2px;background:var(--accent);}
+.sf.mid{background:#ffb347;} .sf.low{background:var(--a3);}
+.sn{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;white-space:nowrap;}
+.bdg{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  padding:2px 6px;border-radius:3px;font-family:'Syne',sans-serif;}
+.bn{background:rgba(232,255,71,.1);color:var(--accent);}
+.bf{background:rgba(71,200,255,.1);color:var(--a2);}
+.bv{background:rgba(180,127,255,.1);color:var(--a4);}
+.be{background:rgba(71,255,178,.1);color:var(--a5);}
+.empty{text-align:center;padding:36px 20px;color:var(--muted);font-size:12px;}
+.empty-i{font-size:26px;margin-bottom:8px;}
+
+/* report tabs */
+.rpt-tabs{display:flex;gap:0;margin-bottom:18px;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.rt{flex:1;padding:8px;background:var(--s2);color:var(--muted);font-family:'Syne',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;
+  border:none;text-align:center;transition:all .2s;border-right:1px solid var(--border);}
+.rt:last-child{border-right:none;}
+.rt:hover{color:var(--text);}
+.rt.ra{background:rgba(232,255,71,.08);color:var(--accent);}
+.rt.ra-emp{background:rgba(71,200,255,.08);color:var(--a2);}
+
+/* security notice */
+.sec-notice{background:rgba(232,255,71,.04);border:1px solid rgba(232,255,71,.15);border-radius:8px;
+  padding:12px 14px;margin-bottom:18px;font-size:12px;color:var(--muted);line-height:1.6;}
+.sec-notice strong{color:var(--accent);font-weight:600;}
+
+/* animations */
+@keyframes fDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fUp  {from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)}}
+.sec:nth-child(1){animation:fUp .4s .04s ease both}
+.sec:nth-child(2){animation:fUp .4s .08s ease both}
+.sec:nth-child(3){animation:fUp .4s .12s ease both}
+.sec:nth-child(4){animation:fUp .4s .16s ease both}
+.sec:nth-child(5){animation:fUp .4s .20s ease both}
+input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.45);cursor:pointer;}
+
+/* ── PDF PRINT STYLES ── */
+.btn-pdf{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;
+  background:transparent;color:var(--a4);font-family:'Syne',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  border:1px solid var(--a4);border-radius:7px;cursor:pointer;transition:all .2s;margin-left:10px;}
+.btn-pdf:hover{background:rgba(180,127,255,.1);}
+
+@media print {
+  body{background:#fff !important;color:#111 !important;}
+  .login-screen,.app-nav,.prog-bar,.sub-w,.suc,.page:not(.act){display:none !important;}
+  .page.act{display:block !important;padding:0 !important;}
+  .sec{background:#fff !important;border:1px solid #ddd !important;border-radius:6px;
+    page-break-inside:avoid;margin-bottom:10px;}
+  .sec-title{color:#333 !important;}
+  .rat-lbl{color:#111 !important;}
+  .stars label{color:#ccc !important;}
+  .stars input:checked ~ label{color:#f59e0b !important;}
+  .na-lbl{border:1px solid #ccc;color:#666 !important;}
+  .tog-b{border:1px solid #ccc;color:#999 !important;font-size:11px;}
+  .t-y{background:#e6ffe6 !important;border-color:#4caf50 !important;color:#2e7d32 !important;}
+  .t-n{background:#ffe6e6 !important;border-color:#f44336 !important;color:#c62828 !important;}
+  input,select,textarea{background:#f9f9f9 !important;border:1px solid #ddd !important;color:#111 !important;}
+  h1,h2{color:#111 !important;}
+  .tag{background:#111 !important;color:#fff !important;}
+  .tag-blue{background:#0077aa !important;}
+  .muted,.sub{color:#555 !important;}
+  .pdf-header{display:block !important;}
+  .btn-pdf,.btn-rst,.nav-logout{display:none !important;}
+  @page{margin:15mm;}
+}
+.pdf-header{display:none;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #eee;}
+.pdf-header h3{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:#111;}
+.pdf-header p{font-size:12px;color:#666;margin-top:3px;}
+
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════════ -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="tag">Feedback Vizitash</div>
+    <h2>Hyrje në Sistem</h2>
+    <p class="sub" style="margin-bottom:22px;">Vendosni emrin e përdoruesit dhe PIN-in tuaj.</p>
+
+    <div id="stepLogin">
+      <div style="margin-bottom:14px;">
+        <label style="font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:7px;">Përdoruesi</label>
+        <input type="text" id="usernameSelect" oninput="onUserSelect()" placeholder="Shkruani emrin tuaj..."
+          style="width:100%;padding:11px 13px;background:var(--s2);border:1px solid var(--border);border-radius:9px;
+                 color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;"
+          autocomplete="off">
+      </div>
+
+      <div id="pinSection" style="display:none;">
+        <label style="font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:7px;">PIN</label>
+        <div class="pin-wrap" style="justify-content:flex-start;margin:0 0 10px 0;">
+          <input class="pin-d" type="password" maxlength="1" inputmode="numeric" id="p1" oninput="pn(this,'p2')">
+          <input class="pin-d" type="password" maxlength="1" inputmode="numeric" id="p2" oninput="pn(this,'p3')" onkeydown="pb(event,'p1')">
+          <input class="pin-d" type="password" maxlength="1" inputmode="numeric" id="p3" oninput="pn(this,'p4')" onkeydown="pb(event,'p2')">
+          <input class="pin-d" type="password" maxlength="1" inputmode="numeric" id="p4" oninput="pn(this,null)"  onkeydown="pb(event,'p3')">
+        </div>
+        <div id="pinErr" class="pin-err"></div>
+        <button class="btn-pin" id="btnEnter" onclick="checkPin()">Hyr →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     APP SHELL
+══════════════════════════════════════ -->
+<div id="appShell" style="display:none">
+
+  <nav class="app-nav">
+    <div class="nav-logo">Vizita</div>
+    <button class="nb" id="nb-store"   onclick="showPage('store')">🏪 Dyqan</button>
+    <button class="nb" id="nb-employee" onclick="showPage('employee')">👤 Punonjës</button>
+    <button class="nb" id="nb-reports" onclick="showPage('reports')">📊 Raporte</button>
+    <div class="nav-sp"></div>
+    <div class="nav-user">
+      <div class="av av-sm" id="navAv"></div>
+      <span class="nav-name" id="navName"></span>
+      <span class="nav-form-badge pfb-store" id="navFormBadge"></span>
+      <button class="nav-logout" onclick="logout()">Dil</button>
+    </div>
+  </nav>
+
+  <!-- ════════════════
+       STORE FORM
+  ════════════════ -->
+  <div class="page" id="pageStore">
+    <div class="wrap">
+      <div class="pg-hdr">
+        <div class="tag">Vizitë Dyqani</div>
+        <h1>Vlerësimi i <span class="hi">Dyqanit</span></h1>
+        <p class="sub">Vlerësoni dyqanin sipas të gjitha kritereve. Fushat me * janë të detyrueshme.</p>
+      </div>
+      <div class="prog-bar"><div class="prog-fill" id="storeProgFill"></div></div>
+
+      <form id="storeForm">
+        <!-- Visit Info -->
+        <div class="sec">
+          <div class="sec-hdr"><div class="sec-ic si-info">📋</div><div class="sec-title">Informacioni i Vizitës</div></div>
+          <div class="g2">
+            <div class="fld">
+              <label>Data e Vizitës <span class="req">*</span></label>
+              <input type="date" id="s-date" required>
+            </div>
+            <div class="fld">
+              <label>Ora e Vizitës</label>
+              <select id="s-time">
+                <option value="" disabled selected>Zgjidhni intervalin</option>
+                <option>Mëngjes (08:00–12:00)</option>
+                <option>Mesditë (12:00–15:00)</option>
+                <option>Pasdite (15:00–18:00)</option>
+                <option>Mbrëmje (18:00–21:00)</option>
+              </select>
+            </div>
+          </div>
+          <div class="fld">
+            <label>Lloji i Dyqanit <span class="req">*</span></label>
+            <div class="pills">
+              <div class="pill" id="sp-Neptun"    onclick="selType('Neptun')">Neptun</div>
+              <div class="pill" id="sp-Franchise" onclick="selType('Franchise')">Franchise</div>
+              <div class="pill" id="sp-Nova"      onclick="selType('Nova')">Nova</div>
+            </div>
+            <input type="hidden" id="s-type">
+          </div>
+          <div class="fld">
+            <label>Emri i Dyqanit <span class="req">*</span></label>
+            <select id="s-store" required>
+              <option value="" disabled selected>Zgjidhni fillimisht llojin e dyqanit</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Store ratings -->
+        <div class="sec">
+          <div class="sec-hdr"><div class="sec-ic si-store">🏪</div><div class="sec-title">Vlerësimi i Dyqanit</div></div>
+          <div class="rat-g">
+            <div class="rat-r"><span class="rat-lbl">Pastërtia dhe higjiena</span>
+              <div class="stars"><input type="radio" name="sc" id="sc5" value="5"><label for="sc5">★</label><input type="radio" name="sc" id="sc4" value="4"><label for="sc4">★</label><input type="radio" name="sc" id="sc3" value="3"><label for="sc3">★</label><input type="radio" name="sc" id="sc2" value="2"><label for="sc2">★</label><input type="radio" name="sc" id="sc1" value="1"><label for="sc1">★</label></div><input type="radio" name="sc" id="sc_na" value="0"><label class="na-lbl" for="sc_na">N/A</label></div>
+            <div class="rat-r"><span class="rat-lbl">Ekspozimi dhe rregullimi i produkteve</span>
+              <div class="stars"><input type="radio" name="sl" id="sl5" value="5"><label for="sl5">★</label><input type="radio" name="sl" id="sl4" value="4"><label for="sl4">★</label><input type="radio" name="sl" id="sl3" value="3"><label for="sl3">★</label><input type="radio" name="sl" id="sl2" value="2"><label for="sl2">★</label><input type="radio" name="sl" id="sl1" value="1"><label for="sl1">★</label></div><input type="radio" name="sl" id="sl_na" value="0"><label class="na-lbl" for="sl_na">N/A</label></div>
+
+            <div class="rat-r"><span class="rat-lbl">Sinjalistika dhe dukshmëria e çmimeve</span>
+              <div class="stars"><input type="radio" name="sg" id="sg5" value="5"><label for="sg5">★</label><input type="radio" name="sg" id="sg4" value="4"><label for="sg4">★</label><input type="radio" name="sg" id="sg3" value="3"><label for="sg3">★</label><input type="radio" name="sg" id="sg2" value="2"><label for="sg2">★</label><input type="radio" name="sg" id="sg1" value="1"><label for="sg1">★</label></div><input type="radio" name="sg" id="sg_na" value="0"><label class="na-lbl" for="sg_na">N/A</label></div>
+            <div class="rat-r"><span class="rat-lbl">Atmosfera e përgjithshme e dyqanit</span>
+              <div class="stars"><input type="radio" name="sa" id="sa5" value="5"><label for="sa5">★</label><input type="radio" name="sa" id="sa4" value="4"><label for="sa4">★</label><input type="radio" name="sa" id="sa3" value="3"><label for="sa3">★</label><input type="radio" name="sa" id="sa2" value="2"><label for="sa2">★</label><input type="radio" name="sa" id="sa1" value="1"><label for="sa1">★</label></div><input type="radio" name="sa" id="sa_na" value="0"><label class="na-lbl" for="sa_na">N/A</label></div>
+          </div>
+          <div class="div"></div>
+          <div class="fld">
+            <label>Materialet promovuese janë të azhurnuara?</label>
+            <div class="tog-g">
+              <div class="tog-b" onclick="tog(this,'y')">✓ Po</div>
+              <div class="tog-b" onclick="tog(this,'n')">✗ Jo</div>
+              <div class="tog-b" onclick="tog(this,'y')">— N/A</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Management -->
+        <div class="sec">
+          <div class="sec-hdr"><div class="sec-ic si-mgmt">👔</div><div class="sec-title">Vlerësimi i Menaxhimit</div></div>
+          <div class="rat-g">
+            <div class="rat-r"><span class="rat-lbl">Prania dhe disponueshmëria në dyqan</span>
+              <div class="stars"><input type="radio" name="mp" id="mp5" value="5"><label for="mp5">★</label><input type="radio" name="mp" id="mp4" value="4"><label for="mp4">★</label><input type="radio" name="mp" id="mp3" value="3"><label for="mp3">★</label><input type="radio" name="mp" id="mp2" value="2"><label for="mp2">★</label><input type="radio" name="mp" id="mp1" value="1"><label for="mp1">★</label></div><input type="radio" name="mp" id="mp_na" value="0"><label class="na-lbl" for="mp_na">N/A</label></div>
+            <div class="rat-r"><span class="rat-lbl">Komunikimi me stafin</span>
+              <div class="stars"><input type="radio" name="mc" id="mc5" value="5"><label for="mc5">★</label><input type="radio" name="mc" id="mc4" value="4"><label for="mc4">★</label><input type="radio" name="mc" id="mc3" value="3"><label for="mc3">★</label><input type="radio" name="mc" id="mc2" value="2"><label for="mc2">★</label><input type="radio" name="mc" id="mc1" value="1"><label for="mc1">★</label></div><input type="radio" name="mc" id="mc_na" value="0"><label class="na-lbl" for="mc_na">N/A</label></div>
+            <div class="rat-r"><span class="rat-lbl">Zgjidhja e problemeve dhe vendimarrja</span>
+              <div class="stars"><input type="radio" name="mpr" id="mpr5" value="5"><label for="mpr5">★</label><input type="radio" name="mpr" id="mpr4" value="4"><label for="mpr4">★</label><input type="radio" name="mpr" id="mpr3" value="3"><label for="mpr3">★</label><input type="radio" name="mpr" id="mpr2" value="2"><label for="mpr2">★</label><input type="radio" name="mpr" id="mpr1" value="1"><label for="mpr1">★</label></div><input type="radio" name="mpr" id="mpr_na" value="0"><label class="na-lbl" for="mpr_na">N/A</label></div>
+            <div class="rat-r"><span class="rat-lbl">Organizimi dhe planifikimi i dyqanit</span>
+              <div class="stars"><input type="radio" name="mo" id="mo5" value="5"><label for="mo5">★</label><input type="radio" name="mo" id="mo4" value="4"><label for="mo4">★</label><input type="radio" name="mo" id="mo3" value="3"><label for="mo3">★</label><input type="radio" name="mo" id="mo2" value="2"><label for="mo2">★</label><input type="radio" name="mo" id="mo1" value="1"><label for="mo1">★</label></div><input type="radio" name="mo" id="mo_na" value="0"><label class="na-lbl" for="mo_na">N/A</label></div>
+          </div>
+          <div class="div"></div>
+          <div class="fld">
+            <label>Menaxheri ishte i dukshëm gjatë vizitës?</label>
+            <div class="tog-g">
+              <div class="tog-b" onclick="tog(this,'y')">✓ Po</div>
+              <div class="tog-b" onclick="tog(this,'n')">✗ Jo</div>
+              <div class="tog-b" onclick="tog(this,'y')">— N/A</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Staff -->
+        <div class="sec">
+          <div class="sec-hdr"><div class="sec-ic si-staff">👥</div><div class="sec-title">Vlerësimi i Stafit</div></div>
+          <div class="rat-g">
+            <div class="rat-r"><span class="rat-lbl">Përshëndetja dhe qasja ndaj klientit</span>
+              <div class="stars"><input type="radio" name="stg" id="stg5" value="5"><label for="stg5">★</label><input type="radio" name="stg" id="stg4" value="4"><label for="stg4">★</label><input type="radio" name="stg" id="stg3" value="3"><label for="stg3">★</label><input type="radio" name="stg" id="stg2" value="2"><label for="stg2">★</label><input type="radio" name="stg" id="stg1" value="1"><label for="stg1">★</label></div><input type="radio" name="stg" id="stg_na" value="0"><label class="na-lbl" for="stg_na">N/A</label></div>
+            <div class="rat-r"><span class="rat-lbl">Njohuria e produkteve</span>
+              <div class="stars"><input type="radio" name="stk" id="stk5" value="5"><label for="stk5">★</label><input type="radio" name="stk" id="stk4" value="4"><label for="stk4">★</label><input type="radio" name="stk" id="stk3" value="3"><label for="stk3">★</label><input type="radio" name="stk" id="stk2" value="2"><label for="stk2">★</label><input type="radio" name="stk" id="stk1" value="1"><label for="stk1">★</label></div><input type="radio" name="stk" id="stk_na" value="0"><label class="na-lbl" for="stk_na">N/A</label></div>
+            <div class="rat-r"><span class="rat-lbl">Qëndrimi dhe profesionalizmi</span>
+              <div class="stars"><input type="radio" name="sta" id="sta5" value="5"><label for="sta5">★</label><input type="radio" name="sta" id="sta4" value="4"><label for="sta4">★</label><input type="radio" name="sta" id="sta3" value="3"><label for="sta3">★</label><input type="radio" name="sta" id="sta2" value="2"><label for="sta2">★</label><input type="radio" name="sta" id="sta1" value="1"><label for="sta1">★</label></div><input type="radio" name="sta" id="sta_na" value="0"><label class="na-lbl" for="sta_na">N/A</label></div>
+            <div class="rat-r"><span class="rat-lbl">Uniforma dhe pamja</span>
+              <div class="stars"><input type="radio" name="stu" id="stu5" value="5"><label for="stu5">★</label><input type="radio" name="stu" id="stu4" value="4"><label for="stu4">★</label><input type="radio" name="stu" id="stu3" value="3"><label for="stu3">★</label><input type="radio" name="stu" id="stu2" value="2"><label for="stu2">★</label><input type="radio" name="stu" id="stu1" value="1"><label for="stu1">★</label></div><input type="radio" name="stu" id="stu_na" value="0"><label class="na-lbl" for="stu_na">N/A</label></div>
+            <div class="rat-r"><span class="rat-lbl">Trajtimi i ankesave</span>
+              <div class="stars"><input type="radio" name="stc" id="stc5" value="5"><label for="stc5">★</label><input type="radio" name="stc" id="stc4" value="4"><label for="stc4">★</label><input type="radio" name="stc" id="stc3" value="3"><label for="stc3">★</label><input type="radio" name="stc" id="stc2" value="2"><label for="stc2">★</label><input type="radio" name="stc" id="stc1" value="1"><label for="stc1">★</label></div><input type="radio" name="stc" id="stc_na" value="0"><label class="na-lbl" for="stc_na">N/A</label></div>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="sec">
+          <div class="sec-hdr"><div class="sec-ic si-notes">📝</div><div class="sec-title">Shënime dhe Ndjekje</div></div>
+          <div class="fld">
+            <label>Përmbledhje e vizitës <span class="req">*</span></label>
+            <textarea id="s-summary" placeholder="Përshtypja e përgjithshme e kësaj vizite..." required oninput="cc(this,'sCt',280)"></textarea>
+            <div class="cc"><span id="sCt">0</span>/280</div>
+          </div>
+          <div class="fld">
+            <label>Problemet kryesore të identifikuara <span class="req">*</span></label>
+            <textarea id="s-issues" placeholder="Çështje që kërkojnë vëmendje..." required oninput="cc(this,'sCt2',400)"></textarea>
+            <div class="cc"><span id="sCt2">0</span>/400</div>
+          </div>
+          <div class="fld">
+            <label>Komente nga Menaxheri <span class="req">*</span></label>
+            <textarea id="s-manager-suggest" placeholder="Komentet e menaxherit të dyqanit..." required oninput="cc(this,'sCt3',400)"></textarea>
+            <div class="cc"><span id="sCt3">0</span>/400</div>
+          </div>
+          <div class="fld">
+            <label>Kërkohet ndjekje?</label>
+            <div class="tog-g">
+              <div class="tog-b" onclick="tog(this,'y')">✓ Po — urgjente</div>
+              <div class="tog-b" onclick="tog(this,'n')">✗ Jo</div>
+              <div class="tog-b" onclick="tog(this,'y')">— N/A</div>
+            </div>
+          </div>
+          <div class="fld">
+            <label>Vlerësimi i përgjithshëm <span class="req">*</span></label>
+            <select id="s-rating" required>
+              <option value="" disabled selected>Zgjidhni notën</option>
+              <option value="5">⭐⭐⭐⭐⭐ Shkëlqyer</option>
+              <option value="4">⭐⭐⭐⭐ Mirë</option>
+              <option value="3">⭐⭐⭐ Mesatar</option>
+              <option value="2">⭐⭐ Nën mesatare</option>
+              <option value="1">⭐ Dobët</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="sub-w"><button type="submit" class="btn-sub">Dërgo Raportin e Dyqanit →</button></div>
+      </form>
+
+      <div class="suc" id="storeSuc">
+        <div class="suc-ic">✓</div>
+        <h2>Raporti i Dyqanit u Dërgua</h2>
+        <p>Feedback-u i vizitës u regjistrua me sukses.</p>
+        <div style="margin-top:14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+          <button class="btn-rst" onclick="resetStore()">Dërgo Tjetër</button>
+          <button class="btn-pdf" onclick="printReport('store')">⬇ Shkarko PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════
+       EMPLOYEE FORM
+  ════════════════ -->
+  <div class="page emp-form" id="pageEmployee">
+    <div class="wrap">
+      <div class="pg-hdr">
+        <div class="tag tag-blue">Vlerësim Punonjësi</div>
+        <h1>Vlerësimi i <span style="color:var(--a2)">Punonjësit</span></h1>
+        <p class="sub">Vlerësoni një punonjës specifik. Vendosni emrin e tyre dhe vlerësoni çdo fushë.</p>
+      </div>
+      <div class="prog-bar"><div class="prog-fill emp-fill" id="empProgFill"></div></div>
+
+      <form id="empForm">
+        <!-- Employee Info -->
+        <div class="sec">
+          <div class="sec-hdr"><div class="sec-ic si-emp">👤</div><div class="sec-title">Informacioni i Punonjësit dhe Vizitës</div></div>
+          <div class="g2">
+            <div class="fld">
+              <label>Data e Vizitës <span class="req">*</span></label>
+              <input type="date" id="e-date" required>
+            </div>
+            <div class="fld">
+              <label>Ora e Vizitës</label>
+              <select id="e-time">
+                <option value="" disabled selected>Zgjidhni intervalin</option>
+                <option>Mëngjes (08:00–12:00)</option>
+                <option>Mesditë (12:00–15:00)</option>
+                <option>Pasdite (15:00–18:00)</option>
+                <option>Mbrëmje (18:00–21:00)</option>
+              </select>
+            </div>
+          </div>
+          <div class="fld">
+            <label>Lloji i Dyqanit <span class="req">*</span></label>
+            <div class="pills">
+              <div class="pill" id="ep-Neptun"    onclick="selTypeEmp('Neptun')">Neptun</div>
+              <div class="pill" id="ep-Franchise" onclick="selTypeEmp('Franchise')">Franchise</div>
+              <div class="pill" id="ep-Nova"       onclick="selTypeEmp('Nova')">Nova</div>
+            </div>
+            <input type="hidden" id="e-type">
+          </div>
+          <div class="fld">
+            <label>Emri i Dyqanit <span class="req">*</span></label>
+            <select id="e-store" required>
+              <option value="" disabled selected>Zgjidhni fillimisht llojin e dyqanit</option>
+            </select>
+          </div>
+          <div class="div"></div>
+          <div class="fld">
+            <label>Emri dhe Mbiemri i Punonjësit <span class="req">*</span></label>
+            <input type="text" id="e-name" placeholder="p.sh. Blerta Kelmendi" required>
+          </div>
+          <div class="fld">
+            <label>Work Position</label>
+            <select id="e-role">
+              <option value="" disabled selected>Select position</option>
+              <option>Shop Operational Specialist</option>
+              <option>Client Advisor</option>
+              <option>Shop Assistant</option>
+              <option>Customer Service</option>
+              <option>Operational Supervisor</option>
+              <option>Shop Manager</option>
+              <option>Sector Supervisor</option>
+              <option>N/A</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Performance ratings -->
+        <div class="sec">
+          <div class="sec-hdr"><div class="sec-ic si-perf">⚡</div><div class="sec-title">Vlerësimi i Performancës</div></div>
+          <div class="rat-g">
+            <div class="rat-r"><span class="rat-lbl">Përshëndetja dhe qasja ndaj klientit</span>
+              <div class="stars"><input type="radio" name="eg" id="eg5" value="5"><label for="eg5">★</label><input type="radio" name="eg" id="eg4" value="4"><label for="eg4">★</label><input type="radio" name="eg" id="eg3" value="3"><label for="eg3">★</label><input type="radio" name="eg" id="eg2" value="2"><label for="eg2">★</label><input type="radio" name="eg" id="eg1" value="1"><label for="eg1">★</label></div><input type="radio" name="eg" id="eg_na" value="0"><label class="na-lbl" for="eg_na">N/A</label></div>
+            <div class="rat-r"><span class="rat-lbl">Njohuria e produkteve dhe këshillimi</span>
+              <div class="stars"><input type="radio" name="ek" id="ek5" value="5"><label for="ek5">★</label><input type="radio" name="ek" id="ek4" value="4"><label for="ek4">★</label><input type="radio" name="ek" id="ek3" value="3"><label for="ek3">★</label><input type="radio" name="ek" id="ek2" value="2"><label for="ek2">★</label><input type="radio" name="ek" id="ek1" value="1"><label for="ek1">★</label></div><input type="radio" name="ek" id="ek_na" value="0"><label class="na-lbl" for="ek_na">N/A</label></div>
+            <div class="rat-r"><span class="rat-lbl">Teknika e shitjes dhe mbyllja</span>
+              <div class="stars"><input type="radio" name="es" id="es5" value="5"><label for="es5">★</label><input type="radio" name="es" id="es4" value="4"><label for="es4">★</label><input type="radio" name="es" id="es3" value="3"><label for="es3">★</label><input type="radio" name="es" id="es2" value="2"><label for="es2">★</label><input type="radio" name="es" id="es1" value="1"><label for="es1">★</label></div><input type="radio" name="es" id="es_na" value="0"><label class="na-lbl" for="es_na">N/A</label></div>
+            <div class="rat-r"><span class="rat-lbl">Qëndrimi dhe profesionalizmi</span>
+              <div class="stars"><input type="radio" name="ea" id="ea5" value="5"><label for="ea5">★</label><input type="radio" name="ea" id="ea4" value="4"><label for="ea4">★</label><input type="radio" name="ea" id="ea3" value="3"><label for="ea3">★</label><input type="radio" name="ea" id="ea2" value="2"><label for="ea2">★</label><input type="radio" name="ea" id="ea1" value="1"><label for="ea1">★</label></div><input type="radio" name="ea" id="ea_na" value="0"><label class="na-lbl" for="ea_na">N/A</label></div>
+            <div class="rat-r"><span class="rat-lbl">Uniforma dhe prezantimi personal</span>
+              <div class="stars"><input type="radio" name="eu" id="eu5" value="5"><label for="eu5">★</label><input type="radio" name="eu" id="eu4" value="4"><label for="eu4">★</label><input type="radio" name="eu" id="eu3" value="3"><label for="eu3">★</label><input type="radio" name="eu" id="eu2" value="2"><label for="eu2">★</label><input type="radio" name="eu" id="eu1" value="1"><label for="eu1">★</label></div><input type="radio" name="eu" id="eu_na" value="0"><label class="na-lbl" for="eu_na">N/A</label></div>
+            <div class="rat-r"><span class="rat-lbl">Puna në grup dhe bashkëpunimi</span>
+              <div class="stars"><input type="radio" name="et" id="et5" value="5"><label for="et5">★</label><input type="radio" name="et" id="et4" value="4"><label for="et4">★</label><input type="radio" name="et" id="et3" value="3"><label for="et3">★</label><input type="radio" name="et" id="et2" value="2"><label for="et2">★</label><input type="radio" name="et" id="et1" value="1"><label for="et1">★</label></div><input type="radio" name="et" id="et_na" value="0"><label class="na-lbl" for="et_na">N/A</label></div>
+            <div class="rat-r"><span class="rat-lbl">Trajtimi i ankesave dhe problemeve</span>
+              <div class="stars"><input type="radio" name="ec" id="ec5" value="5"><label for="ec5">★</label><input type="radio" name="ec" id="ec4" value="4"><label for="ec4">★</label><input type="radio" name="ec" id="ec3" value="3"><label for="ec3">★</label><input type="radio" name="ec" id="ec2" value="2"><label for="ec2">★</label><input type="radio" name="ec" id="ec1" value="1"><label for="ec1">★</label></div><input type="radio" name="ec" id="ec_na" value="0"><label class="na-lbl" for="ec_na">N/A</label></div>
+          </div>
+        </div>
+
+        <!-- Employee notes -->
+        <div class="sec">
+          <div class="sec-hdr"><div class="sec-ic si-notes">📝</div><div class="sec-title">Vëzhgime dhe Komente</div></div>
+          <div class="fld">
+            <label>Pikat e forta të vëzhguara <span class="req">*</span></label>
+            <textarea id="e-strengths" placeholder="Çfarë bëri mirë ky punonjës?" required oninput="cc(this,'eCt1',300)"></textarea>
+            <div class="cc"><span id="eCt1">0</span>/300</div>
+          </div>
+          <div class="fld">
+            <label>Fushat për përmirësim</label>
+            <textarea placeholder="Çfarë duhet të punojë ky punonjës?" oninput="cc(this,'eCt2',300)"></textarea>
+            <div class="cc"><span id="eCt2">0</span>/300</div>
+          </div>
+          <div class="fld">
+            <label>A ishte punonjësi i vetëdijshëm se po vëzhgohej?</label>
+            <div class="tog-g">
+              <div class="tog-b" onclick="tog(this,'y')">✓ Po</div>
+              <div class="tog-b" onclick="tog(this,'n')">✗ Jo</div>
+              <div class="tog-b" onclick="tog(this,'y')">— N/A</div>
+            </div>
+          </div>
+          <div class="fld">
+            <label>Vlerësimi i përgjithshëm i punonjësit <span class="req">*</span></label>
+            <select id="e-rating" required>
+              <option value="" disabled selected>Zgjidhni notën</option>
+              <option value="5">⭐⭐⭐⭐⭐ Shkëlqyer</option>
+              <option value="4">⭐⭐⭐⭐ Mirë</option>
+              <option value="3">⭐⭐⭐ Plotëson pritshmëritë</option>
+              <option value="2">⭐⭐ Kërkon përmirësim</option>
+              <option value="1">⭐ I pakënaqshëm</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="sub-w"><button type="submit" class="btn-sub emp-btn">Dërgo Vlerësimin e Punonjësit →</button></div>
+      </form>
+
+      <div class="suc" id="empSuc">
+        <div class="suc-ic emp-suc-ic">✓</div>
+        <h2>Vlerësimi i Punonjësit u Dërgua</h2>
+        <p>Feedback-u u regjistrua me sukses.</p>
+        <div style="margin-top:14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+          <button class="btn-rst emp-btn-rst" onclick="resetEmp()">Vlerëso Punonjës Tjetër</button>
+          <button class="btn-pdf" onclick="printReport('employee')">⬇ Shkarko PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════
+       REPORTS
+  ════════════════ -->
+  <div class="page" id="pageReports">
+    <div class="wrap-wide">
+      <div class="rpt-hdr">
+        <h2>Raporte dhe Analitikë</h2>
+        <p class="sub">Rezultate të grumbulluara nga të gjitha raportet e dërguara në këtë sesion.</p>
+      </div>
+
+      <div class="sec-notice">
+        <strong>📋 Konfigurimi i Google Sheet:</strong> Të dyja formularet dërgojnë të dhëna në
+        <strong>një Google Sheet të vetëm</strong>. Kolona <em>Form Type</em> i dallon rreshtat — filtroni sipas "Store Visit" ose "Employee Review".
+      </div>
+
+      <div class="rpt-tabs">
+        <button class="rt ra" id="rtStore"  onclick="switchRptTab('store')">🏪 Raportet e Dyqanit</button>
+        <button class="rt"    id="rtEmp"    onclick="switchRptTab('emp')">👤 Raportet e Punonjësve</button>
+      </div>
+
+      <!-- Store reports -->
+      <div id="rptStore">
+        <div class="rpt-filt">
+          <select class="fs" id="fType" onchange="renderRpt()"><option value="">Të gjitha llojet</option><option>Neptun</option><option>Franchise</option><option>Nova</option></select>
+          <select class="fs" id="fRev"  onchange="renderRpt()"><option value="">Të gjithë vlerësuesit</option><option>Artenca T.</option><option>Greta U.</option></select>
+          <select class="fs" id="fPer"  onchange="renderRpt()"><option value="">Gjithë koha</option><option value="7">7 ditët e fundit</option><option value="30">30 ditët e fundit</option></select>
+        </div>
+        <div class="stat-grid" id="statGrid"></div>
+        <div class="tw"><div class="tt"><span>Renditja e Dyqaneve</span><span id="sCount" style="font-size:10px;font-weight:400"></span></div><div id="storeTable"></div></div>
+        <div class="tw"><div class="tt"><span>Vizitat e Fundit në Dyqane</span></div><div id="visitLog"></div></div>
+      </div>
+
+      <!-- Employee reports -->
+      <div id="rptEmp" style="display:none">
+        <div class="rpt-filt">
+          <select class="fs" id="feRev" onchange="renderEmpRpt()"><option value="">Të gjithë vlerësuesit</option><option>Artenca T.</option><option>Greta U.</option></select>
+          <select class="fs" id="fePer" onchange="renderEmpRpt()"><option value="">Gjithë koha</option><option value="7">7 ditët e fundit</option><option value="30">30 ditët e fundit</option></select>
+        </div>
+        <div class="stat-grid" id="empStatGrid"></div>
+        <div class="tw"><div class="tt"><span>Renditja e Punonjësve</span><span id="eCount" style="font-size:10px;font-weight:400"></span></div><div id="empTable"></div></div>
+        <div class="tw"><div class="tt"><span>Vlerësimet e Fundit të Punonjësve</span></div><div id="empLog"></div></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end appShell -->
+
+<script>
+// ══════════════════════════════════════════
+// SECURITY: PINs stored as SHA-256 hashes only.
+// Plain PIN numbers are NEVER in this file.
+// To change PINs: generate new SHA-256 hash at sha256.online
+// and replace the hash string below.
+//
+// Current PINs (share privately — do not include here):
+// Artenca Store PIN hash:    6557739a67283a8de383fc5c0997fbec7c5721a46f28f3235fc9607598d9016b
+// Artenca Employee PIN hash: 923af4835de7a46ff706aea75ff4ce19dc0878457bda631660e039b34f2105b7
+// Greta Store PIN hash:      96c56127d5ff132709622ca8baa85cd3c5e7aac98c38a5652a12f6e979d78a6d
+// Greta Employee PIN hash:   197a2971491b3b3aa2dc2891ee2395bc9f0b9d1de440fa7379f2b4b1ecfeb183
+// ══════════════════════════════════════════
+
+// Single PIN per user — unlocks both forms
+// Artenca PIN: 2024  →  hash below
+// Greta PIN:   4056  →  hash below
+const CREDENTIALS = {
+  'Artenca T.': '6557739a67283a8de383fc5c0997fbec7c5721a46f28f3235fc9607598d9016b',
+  'Greta U.':   '96c56127d5ff132709622ca8baa85cd3c5e7aac98c38a5652a12f6e979d78a6d'
+};
+
+// Rate limiting: max 3 attempts, then 60s lockout
+const ATTEMPTS = {}; // key: reviewer+formType
+let lockUntil = 0;
+
+const STORES = {
+  Neptun:    ['Ali Demi','Don Bosko','Kamez','Kolonat','Kristal','Profarma','QTU','Rr. E Kavajes','TEG','Hilton','Berat','Durres','Elbasan','Fieri','Kavaje','Korce','Lezhe','Lushnje','Shkoder','Vlore'],
+  Franchise: ['Sarande','Belsh','Bilisht','Burrel','Fushe-Kruje','Gjirokaster','Koplik','Lac','Librazhd','Peshkopi','Pogradec'],
+  Nova:      ['Rrogozhine','Prrenjas','Gramsh','Lushnje','Golem','Fier','Delvine','Pogradec','Kruje','Bulqize','Cerrik','Yzberisht','Vlore','Roskovec','Shijak','Permet','Paskuqan','Korçë']
+};
+
+let cur = null; // current session: {name, initials, avatarClass, formType}
+let selectedFormType = null;
+let storeData = [];
+let empData   = [];
+
+// ── SHA-256 using WebCrypto ──
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+// ── LOGIN FLOW ──
+
+function onUserSelect() {
+  const name = document.getElementById('usernameSelect').value.trim();
+  if (!name) {
+    document.getElementById('pinSection').style.display = 'none';
+    cur = null;
+    return;
+  }
+  const initials = name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+  cur = { name, initials, avClass:'av-a', formType: null };
+  document.getElementById('pinSection').style.display = 'block';
+}
+
+function clrPin() {
+  ['p1','p2','p3','p4'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('pinErr').textContent = '';
+}
+
+function pn(el, nxt) { if (el.value.length === 1 && nxt) document.getElementById(nxt).focus(); }
+function pb(e, prv)  { if (e.key === 'Backspace' && e.target.value === '') document.getElementById(prv).focus(); }
+
+document.getElementById('p4').addEventListener('keydown', e => { if (e.key === 'Enter') checkPin(); });
+
+async function checkPin() {
+  if (!cur) { document.getElementById('pinErr').textContent = 'Zgjidhni fillimisht emrin tuaj.'; return; }
+
+  const now = Date.now();
+  if (now < lockUntil) {
+    const secs = Math.ceil((lockUntil - now) / 1000);
+    document.getElementById('pinErr').textContent = `Shumë tentativa. Prisni ${secs}s.`;
+    return;
+  }
+
+  const entered = ['p1','p2','p3','p4'].map(id => document.getElementById(id).value).join('');
+  if (entered.length < 4) { document.getElementById('pinErr').textContent = 'Vendosni të 4 shifrat.'; return; }
+
+  const hash = await sha256(entered);
+  const expected = CREDENTIALS[cur.name];
+  if (!expected) {
+    document.getElementById('pinErr').textContent = 'Përdoruesi nuk u njoh. Kontrolloni emrin.';
+    return;
+  }
+  const attKey = cur.name;
+
+  if (hash === expected) {
+    ATTEMPTS[attKey] = 0;
+    cur.formType = 'both';
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appShell').style.display = 'block';
+
+    const nav = document.getElementById('navAv');
+    nav.textContent = cur.initials; nav.className = 'av av-sm ' + cur.avClass;
+    document.getElementById('navName').textContent = cur.name;
+
+    const badge = document.getElementById('navFormBadge');
+    badge.textContent = 'Dyqan & Punonjës'; badge.className = 'nav-form-badge pfb-store';
+
+    // Both nav buttons visible
+    document.getElementById('nb-store').style.display = '';
+    document.getElementById('nb-employee').style.display = '';
+    showPage('store');
+    setToday();
+  } else {
+    ATTEMPTS[attKey] = (ATTEMPTS[attKey] || 0) + 1;
+    if (ATTEMPTS[attKey] >= 3) {
+      lockUntil = Date.now() + 60000;
+      document.getElementById('pinErr').textContent = 'Shumë tentativa të dështuara. Bllokuar për 60 sekonda.';
+      document.getElementById('btnEnter').disabled = true;
+      setTimeout(() => {
+        lockUntil = 0; ATTEMPTS[attKey] = 0;
+        document.getElementById('btnEnter').disabled = false;
+        document.getElementById('pinErr').textContent = '';
+      }, 60000);
+    } else {
+      const left = 3 - ATTEMPTS[attKey];
+      document.getElementById('pinErr').textContent = `PIN i gabuar. ${left} tentativ${left>1?'a':''} të mbetura.`;
+    }
+    clrPin(); document.getElementById('p1').focus();
+  }
+}
+
+function logout() {
+  cur = null; selectedFormType = null;
+  document.getElementById('appShell').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('usernameSelect').value = ''; document.getElementById('pinSection').style.display = 'none';
+  document.getElementById('pinSection').style.display = 'none';
+  document.getElementById('nb-store').style.display = '';
+  document.getElementById('nb-employee').style.display = '';
+  resetStore(); resetEmp();
+}
+
+// ── NAVIGATION ──
+function showPage(pg) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('act'));
+  document.querySelectorAll('.nb').forEach(b => b.classList.remove('act','act-emp','act-rpt'));
+  const pages = {store:'pageStore', employee:'pageEmployee', reports:'pageReports'};
+  const navs  = {store:'nb-store', employee:'nb-employee', reports:'nb-reports'};
+  const cls   = {store:'act', employee:'act-emp', reports:'act-rpt'};
+  document.getElementById(pages[pg]).classList.add('act');
+  const nb = document.getElementById(navs[pg]);
+  if (nb) nb.classList.add(cls[pg]);
+  if (pg === 'reports') renderRpt();
+}
+
+// ── STORE TYPE ──
+function selType(type) {
+  ['Neptun','Franchise','Nova'].forEach(t => document.getElementById('sp-'+t).className='pill');
+  document.getElementById('sp-'+type).classList.add(type==='Neptun'?'p-n':type==='Franchise'?'p-f':'p-v');
+  document.getElementById('s-type').value = type;
+  populateStores('s-store', type);
+}
+function selTypeEmp(type) {
+  ['Neptun','Franchise','Nova'].forEach(t => document.getElementById('ep-'+t).className='pill');
+  document.getElementById('ep-'+type).classList.add(type==='Neptun'?'p-n':type==='Franchise'?'p-f':'p-v');
+  document.getElementById('e-type').value = type;
+  populateStores('e-store', type);
+}
+function populateStores(selId, type) {
+  const sel = document.getElementById(selId);
+  sel.innerHTML = '<option value="" disabled selected>Zgjidhni dyqanin</option>';
+  STORES[type].forEach(s => { const o = document.createElement('option'); o.value=s; o.textContent=s; sel.appendChild(o); });
+}
+
+// ── HELPERS ──
+function getR(name) { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? parseInt(el.value) : null; }
+function avg(arr)   { const v = arr.filter(x=>x!=null); return v.length ? Math.round(v.reduce((a,b)=>a+b,0)/v.length*10)/10 : null; }
+function tog(btn, val) {
+  btn.parentElement.querySelectorAll('.tog-b').forEach(b => b.classList.remove('t-y','t-n'));
+  btn.classList.add(val==='y'?'t-y':'t-n');
+}
+function cc(el, id, max) { const l=el.value.length; document.getElementById(id).textContent=l; if(l>max) el.value=el.value.substring(0,max); }
+function setToday() {
+  const d = new Date();
+  const s = d.toISOString().split('T')[0];
+  ['s-date','e-date'].forEach(id => { const el=document.getElementById(id); if(el) el.value=s; });
+}
+
+function updProg(radios, reqIds, fillId) {
+  let f=0, t=radios.length + reqIds.length;
+  radios.forEach(n => { if(getR(n)) f++; });
+  reqIds.forEach(id => { const el=document.getElementById(id); if(el&&el.value.trim()) f++; });
+  document.getElementById(fillId).style.width = Math.min(100,Math.round(f/t*100))+'%';
+}
+
+document.getElementById('storeForm').addEventListener('input',  () => updProg(['sc','sl','sg','sa','mp','mc','mpr','mo','stg','stk','sta','stu','stc'],['s-date','s-store','s-summary','s-issues','s-manager-suggest','s-rating'],'storeProgFill'));
+document.getElementById('storeForm').addEventListener('change', () => updProg(['sc','sl','sg','sa','mp','mc','mpr','mo','stg','stk','sta','stu','stc'],['s-date','s-store','s-summary','s-issues','s-manager-suggest','s-rating'],'storeProgFill'));
+document.getElementById('empForm').addEventListener('input',    () => updProg(['eg','ek','es','ea','eu','et','ec'],['e-date','e-store','e-name','e-strengths','e-rating'],'empProgFill'));
+document.getElementById('empForm').addEventListener('change',   () => updProg(['eg','ek','es','ea','eu','et','ec'],['e-date','e-store','e-name','e-strengths','e-rating'],'empProgFill'));
+
+// ── STORE SUBMIT ──
+// ══════════════════════════════════════════
+// SHEETMONKEY ENDPOINT
+// ══════════════════════════════════════════
+// DESTINATION — paste your URL below.
+//
+// OPTION A — Google Sheets (Apps Script Web App URL):
+//   https://script.google.com/macros/s/YOUR_ID/exec
+//
+// OPTION B — OneDrive Excel (Power Automate HTTP trigger URL):
+//   https://prod-xx.westeurope.logic.azure.com/workflows/...
+//
+// ══════════════════════════════════════════
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwcaGeorG9goqmch8B3X9I_A9ShT-_KCyugJuuxz0xygnt-VE3L4IdVI8Q-l7j4K_EQEw/exec';
+
+async function sendToSheet(payload, tab) {
+  if (!SHEET_URL || SHEET_URL.includes('PASTE_YOUR')) {
+    console.warn('No destination URL set.');
+    return;
+  }
+  try {
+    const params = new URLSearchParams();
+    // Pass which tab to write to: 'Vizitat e Dyqaneve' or 'Vlerësimet e Punonjësve'
+    params.append('tab', tab || 'Sheet1');
+    Object.entries(payload).forEach(([k,v]) => params.append(k, v ?? ''));
+    await fetch(SHEET_URL + '?' + params.toString(), {
+      method: 'GET',
+      mode: 'no-cors'
+    });
+    console.log('Data sent to tab:', tab);
+  } catch(err) {
+    console.warn('Send failed:', err);
+  }
+}
+
+// ── PDF PRINT ──
+function printReport(type) {
+  // Show the form (hidden after submit) for printing, hide success screen
+  const formId   = type === 'store' ? 'storeForm' : 'empForm';
+  const sucId    = type === 'store' ? 'storeSuc'  : 'empSuc';
+  const pageId   = type === 'store' ? 'pageStore' : 'pageEmployee';
+  const form     = document.getElementById(formId);
+  const suc      = document.getElementById(sucId);
+  const page     = document.getElementById(pageId);
+
+  // Build a print header with key info
+  const storeName = type === 'store'
+    ? document.getElementById('s-store').value
+    : document.getElementById('e-store').value;
+  const dateVal = type === 'store'
+    ? document.getElementById('s-date').value
+    : document.getElementById('e-date').value;
+  const empName = type === 'employee' ? document.getElementById('e-name').value : '';
+
+  // Insert or update print header
+  let hdr = document.getElementById('pdfPrintHeader');
+  if (!hdr) {
+    hdr = document.createElement('div');
+    hdr.id = 'pdfPrintHeader';
+    hdr.className = 'pdf-header';
+    page.querySelector('.wrap').prepend(hdr);
+  }
+  hdr.innerHTML = `
+    <h3>${type === 'store' ? 'Raport Vizite Dyqani' : 'Vlerësim Punonjësi'}</h3>
+    <p>${storeName} &nbsp;|&nbsp; ${dateVal} &nbsp;|&nbsp; ${cur.name}${empName ? ' &nbsp;|&nbsp; ' + empName : ''}</p>`;
+
+  // Temporarily show the form for print
+  form.style.display = 'block';
+  suc.style.display  = 'none';
+
+  window.print();
+
+  // Restore after print dialog closes
+  setTimeout(() => {
+    form.style.display = 'none';
+    suc.style.display  = 'block';
+  }, 500);
+}
+
+// ── STORE SUBMIT ──
+document.getElementById('storeForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = this.querySelector('.btn-sub');
+  btn.textContent = 'Duke ruajtur…'; btn.disabled = true;
+
+  // Helper: get selected toggle label text
+  function getTogVal(section, label) {
+    const grp = Array.from(document.querySelectorAll('#storeForm .fld')).find(f => f.querySelector('label') && f.querySelector('label').textContent.trim().startsWith(label));
+    if (!grp) return '';
+    const active = grp.querySelector('.tog-b.t-y, .tog-b.t-n');
+    return active ? active.textContent.trim() : '';
+  }
+
+  const storeAvg = avg([getR('sc'),getR('sl'),getR('ss'),getR('sg'),getR('sa')]);
+  const mgmtAvg  = avg([getR('mp'),getR('mc'),getR('mpr'),getR('mo')]);
+  const staffAvg = avg([getR('stg'),getR('stk'),getR('sta'),getR('stu'),getR('stc')]);
+
+  const row = {
+    // ── Identity ──
+    'Form Type':        'Store Visit',
+    'Date':             document.getElementById('s-date').value,
+    'Time':             document.getElementById('s-time').value,
+    'Store Type':       document.getElementById('s-type').value,
+    'Store Name':       document.getElementById('s-store').value,
+    'Reviewer':         cur.name,
+    // ── Store ratings (individual) ──
+    'S1 Pastërtia':               getR('sc') ?? '',
+    'S2 Ekspozimi':                getR('sl') ?? '',
+        'S4 Sinjalistika':             getR('sg') ?? '',
+    'S5 Atmosfera':                getR('sa') ?? '',
+    'Store Score (avg)':           storeAvg ?? '',
+    'Materialet promovuese':       getTogVal('store','Materialet'),
+    // ── Management ratings (individual) ──
+    'M1 Prania':                   getR('mp') ?? '',
+    'M2 Komunikimi':               getR('mc') ?? '',
+    'M3 Vendimmarrja':             getR('mpr') ?? '',
+    'M4 Organizimi':               getR('mo') ?? '',
+    'Mgmt Score (avg)':            mgmtAvg ?? '',
+    'Menaxheri i dukshëm':         getTogVal('mgmt','Menaxheri'),
+    // ── Staff ratings (individual) ──
+    'ST1 Përshëndetja':            getR('stg') ?? '',
+    'ST2 Njohuria produkteve':     getR('stk') ?? '',
+    'ST3 Profesionalizmi':         getR('sta') ?? '',
+    'ST4 Uniforma':                getR('stu') ?? '',
+    'ST5 Ankesat':                 getR('stc') ?? '',
+    'Staff Score (avg)':           staffAvg ?? '',
+    // ── Notes ──
+    'Përmbledhje':                 document.getElementById('s-summary').value,
+    'Problemet kryesore':          document.getElementById('s-issues') ? document.getElementById('s-issues').value : '',
+    'Komente nga Menaxheri':        document.getElementById('s-manager-suggest') ? document.getElementById('s-manager-suggest').value : '',
+    'Kërkohet ndjekje':            getTogVal('followup','Kërkohet'),
+    'Overall Rating':              parseFloat(document.getElementById('s-rating').value) || '',
+    // ── Employee columns blank for store rows ──
+    'Employee Name': '', 'Work Position': '', 'Perf Score': '',
+    'E1 Përshëndetja':'', 'E2 Njohuritë':'', 'E3 Shitja':'',
+    'E4 Profesionalizmi':'', 'E5 Uniforma':'', 'E6 Puna në grup':'', 'E7 Ankesat':'',
+    'Pikat e forta': '', 'Fushat për përmirësim': '', 'I vetëdijshëm': ''
+  };
+
+  storeData.push({
+    date: row['Date'], type: row['Store Type'], store: row['Store Name'],
+    reviewer: row['Reviewer'], storeScore: storeAvg,
+    mgmtScore: mgmtAvg, staffScore: staffAvg,
+    overall: row['Overall Rating'], summary: row['Përmbledhje']
+  });
+
+  await sendToSheet(row, 'Vizitat e Dyqaneve');
+
+  btn.textContent = 'Dërgo Raportin e Dyqanit →'; btn.disabled = false;
+  document.getElementById('storeForm').style.display='none';
+  document.getElementById('storeSuc').style.display='block';
+  document.getElementById('storeProgFill').style.width='100%';
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+// ── EMPLOYEE SUBMIT ──
+document.getElementById('empForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = this.querySelector('.btn-sub');
+  btn.textContent = 'Duke ruajtur…'; btn.disabled = true;
+
+  function getEmpTogVal(labelStart) {
+    const grp = Array.from(document.querySelectorAll('#empForm .fld')).find(f => f.querySelector('label') && f.querySelector('label').textContent.trim().startsWith(labelStart));
+    if (!grp) return '';
+    const active = grp.querySelector('.tog-b.t-y, .tog-b.t-n');
+    return active ? active.textContent.trim() : '';
+  }
+
+  const perfAvg = avg([getR('eg'),getR('ek'),getR('es'),getR('ea'),getR('eu'),getR('et'),getR('ec')]);
+
+  const row = {
+    // ── Identity ──
+    'Form Type':        'Employee Review',
+    'Date':             document.getElementById('e-date').value,
+    'Time':             document.getElementById('e-time').value,
+    'Store Type':       document.getElementById('e-type').value,
+    'Store Name':       document.getElementById('e-store').value,
+    'Reviewer':         cur.name,
+    'Employee Name':    document.getElementById('e-name').value.trim(),
+    'Work Position':    document.getElementById('e-role').value,
+    // ── Performance ratings (individual) ──
+    'E1 Përshëndetja':  getR('eg') ?? '',
+    'E2 Njohuritë':     getR('ek') ?? '',
+    'E3 Shitja':        getR('es') ?? '',
+    'E4 Profesionalizmi': getR('ea') ?? '',
+    'E5 Uniforma':      getR('eu') ?? '',
+    'E6 Puna në grup':  getR('et') ?? '',
+    'E7 Ankesat':       getR('ec') ?? '',
+    'Perf Score':       perfAvg ?? '',
+    'Overall Rating':   parseFloat(document.getElementById('e-rating').value) || '',
+    // ── Notes ──
+    'Pikat e forta':           document.getElementById('e-strengths').value,
+    'Fushat për përmirësim':   document.querySelector('#empForm textarea:not(#e-strengths)') ? document.querySelector('#empForm textarea:not(#e-strengths)').value : '',
+    'I vetëdijshëm':           getEmpTogVal('A ishte'),
+    // ── Store columns blank for employee rows ──
+    'Store Score (avg)': '', 'Mgmt Score (avg)': '', 'Staff Score (avg)': '',
+    'S1 Pastërtia':'', 'S2 Ekspozimi':'',  'S4 Sinjalistika':'', 'S5 Atmosfera':'',
+    'Materialet promovuese':'',
+    'M1 Prania':'', 'M2 Komunikimi':'', 'M3 Vendimmarrja':'', 'M4 Organizimi':'',
+    'Menaxheri i dukshëm':'',
+    'ST1 Përshëndetja':'', 'ST2 Njohuria produkteve':'', 'ST3 Profesionalizmi':'',
+    'ST4 Uniforma':'', 'ST5 Ankesat':'', 'Staff Score':'',
+    'Përmbledhje':'', 'Problemet kryesore':'', 'Komente nga Menaxheri':'', 'Kërkohet ndjekje':''
+  };
+
+  empData.push({
+    date: row['Date'], type: row['Store Type'], store: row['Store Name'],
+    reviewer: row['Reviewer'], employee: row['Employee Name'],
+    role: row['Work Position'], score: perfAvg,
+    overall: row['Overall Rating'], strengths: row['Pikat e forta']
+  });
+
+  await sendToSheet(row, 'Vlerësimet e Punonjësve');
+
+  btn.textContent = 'Dërgo Vlerësimin e Punonjësit →'; btn.disabled = false;
+  document.getElementById('empForm').style.display='none';
+  document.getElementById('empSuc').style.display='block';
+  document.getElementById('empProgFill').style.width='100%';
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+function resetStore() {
+  document.getElementById('storeForm').reset();
+  document.getElementById('storeForm').style.display='block';
+  document.getElementById('storeSuc').style.display='none';
+  document.getElementById('storeProgFill').style.width='0%';
+  document.querySelectorAll('#storeForm .tog-b').forEach(b=>b.classList.remove('t-y','t-n'));
+  ['sp-Neptun','sp-Franchise','sp-Nova'].forEach(id=>document.getElementById(id).className='pill');
+  document.getElementById('s-type').value='';
+  document.getElementById('s-store').innerHTML='<option value="" disabled selected>Zgjidhni fillimisht llojin e dyqanit</option>';
+  document.getElementById('sCt').textContent='0'; document.getElementById('sCt2').textContent='0'; document.getElementById('sCt3').textContent='0';
+  setToday(); window.scrollTo({top:0,behavior:'smooth'});
+}
+function resetEmp() {
+  document.getElementById('empForm').reset();
+  document.getElementById('empForm').style.display='block';
+  document.getElementById('empSuc').style.display='none';
+  document.getElementById('empProgFill').style.width='0%';
+  document.querySelectorAll('#empForm .tog-b').forEach(b=>b.classList.remove('t-y','t-n'));
+  ['ep-Neptun','ep-Franchise','ep-Nova'].forEach(id=>document.getElementById(id).className='pill');
+  document.getElementById('e-type').value='';
+  document.getElementById('e-store').innerHTML='<option value="" disabled selected>Zgjidhni fillimisht llojin e dyqanit</option>';
+  document.getElementById('eCt1').textContent='0'; document.getElementById('eCt2').textContent='0';
+  setToday(); window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── REPORTS ──
+function switchRptTab(tab) {
+  document.getElementById('rptStore').style.display = tab==='store' ? '' : 'none';
+  document.getElementById('rptEmp').style.display   = tab==='emp'   ? '' : 'none';
+  document.getElementById('rtStore').className = tab==='store' ? 'rt ra'      : 'rt';
+  document.getElementById('rtEmp').className   = tab==='emp'   ? 'rt ra-emp'  : 'rt';
+  if(tab==='emp') renderEmpRpt(); else renderRpt();
+}
+
+function sfCls(v) { if(!v) return ''; return v>=4?'':v>=2.5?'mid':'low'; }
+
+function getFilt() {
+  const type=document.getElementById('fType').value;
+  const rev =document.getElementById('fRev').value;
+  const days=parseInt(document.getElementById('fPer').value);
+  return storeData.filter(s=>{
+    if(type && s.type!==type) return false;
+    if(rev  && s.reviewer!==rev) return false;
+    if(days){ const c=new Date(); c.setDate(c.getDate()-days); if(new Date(s.date)<c) return false; }
+    return true;
+  });
+}
+function getEmpFilt() {
+  const rev =document.getElementById('feRev').value;
+  const days=parseInt(document.getElementById('fePer').value);
+  return empData.filter(s=>{
+    if(rev  && s.reviewer!==rev) return false;
+    if(days){ const c=new Date(); c.setDate(c.getDate()-days); if(new Date(s.date)<c) return false; }
+    return true;
+  });
+}
+
+function renderRpt() {
+  const data = getFilt();
+  const byT = {Neptun:[],Franchise:[],Nova:[]};
+  data.forEach(s=>{ if(byT[s.type]) byT[s.type].push(s.overall); });
+  const avgT = t => byT[t].length ? (byT[t].reduce((a,b)=>a+b,0)/byT[t].length).toFixed(1):'—';
+
+  document.getElementById('statGrid').innerHTML = `
+    <div class="sc sc-t"><div class="sl">Total Visits</div><div class="sv">${data.length}</div><div class="ss">all stores</div></div>
+    <div class="sc sc-n"><div class="sl">Neptun Avg</div><div class="sv">${avgT('Neptun')}</div><div class="ss">${byT.Neptun.length} visits</div></div>
+    <div class="sc sc-f"><div class="sl">Franchise Avg</div><div class="sv">${avgT('Franchise')}</div><div class="ss">${byT.Franchise.length} visits</div></div>
+    <div class="sc sc-v"><div class="sl">Nova Avg</div><div class="sv">${avgT('Nova')}</div><div class="ss">${byT.Nova.length} visits</div></div>`;
+
+  const sm={};
+  data.forEach(s=>{ if(!sm[s.store]) sm[s.store]={type:s.type,s:[],m:[],st:[],ov:[],v:0};
+    sm[s.store].s.push(s.storeScore); sm[s.store].m.push(s.mgmtScore);
+    sm[s.store].st.push(s.staffScore); sm[s.store].ov.push(s.overall); sm[s.store].v++; });
+  const stores=Object.entries(sm).map(([n,d])=>({name:n,type:d.type,visits:d.v,
+    store:avg(d.s.filter(Boolean)),mgmt:avg(d.m.filter(Boolean)),staff:avg(d.st.filter(Boolean)),overall:avg(d.ov.filter(Boolean))}))
+    .sort((a,b)=>(b.overall||0)-(a.overall||0));
+
+  document.getElementById('sCount').textContent = stores.length+' dyqane';
+  document.getElementById('storeTable').innerHTML = !stores.length
+    ? '<div class="empty"><div class="empty-i">📭</div>No store visits submitted yet.</div>'
+    : '<table><thead><tr><th>Store</th><th>Type</th><th>Visits</th><th>Store</th><th>Mgmt</th><th>Staff</th><th>Overall</th></tr></thead><tbody>'
+      + stores.map(s=>`<tr><td><strong>${s.name}</strong></td><td><span class="bdg b${s.type[0].toLowerCase()}">${s.type}</span></td>
+        <td style="text-align:center">${s.visits}</td>
+        <td>${s.store!=null?s.store.toFixed(1):'—'}</td><td>${s.mgmt!=null?s.mgmt.toFixed(1):'—'}</td><td>${s.staff!=null?s.staff.toFixed(1):'—'}</td>
+        <td><div class="sw"><div class="sb"><div class="sf ${sfCls(s.overall)}" style="width:${s.overall?s.overall/5*100:0}%"></div></div>
+        <span class="sn">${s.overall!=null?s.overall.toFixed(1):'—'}</span></div></td></tr>`).join('')+'</tbody></table>';
+
+  document.getElementById('visitLog').innerHTML = !data.length
+    ? '<div class="empty"><div class="empty-i">🗒️</div>No visits logged yet.</div>'
+    : '<table><thead><tr><th>Date</th><th>Store</th><th>Type</th><th>Reviewer</th><th>Store</th><th>Mgmt</th><th>Staff</th><th>Overall</th></tr></thead><tbody>'
+      + [...data].reverse().slice(0,20).map(s=>`<tr><td>${s.date}</td><td><strong>${s.store}</strong></td>
+        <td><span class="bdg b${s.type[0].toLowerCase()}">${s.type}</span></td>
+        <td style="color:var(--muted);font-size:11px">${s.reviewer}</td>
+        <td>${s.storeScore!=null?s.storeScore.toFixed(1):'—'}</td><td>${s.mgmtScore!=null?s.mgmtScore.toFixed(1):'—'}</td>
+        <td>${s.staffScore!=null?s.staffScore.toFixed(1):'—'}</td>
+        <td><span class="sn">${s.overall.toFixed(1)}</span></td></tr>`).join('')+'</tbody></table>';
+}
+
+function renderEmpRpt() {
+  const data = getEmpFilt();
+  document.getElementById('empStatGrid').innerHTML = `
+    <div class="sc sc-t"><div class="sl">Total Reviews</div><div class="sv">${data.length}</div><div class="ss">employees reviewed</div></div>
+    <div class="sc sc-e"><div class="sl">Avg Score</div><div class="sv">${data.length?(data.reduce((a,b)=>a+(b.overall||0),0)/data.length).toFixed(1):'—'}</div><div class="ss">overall average</div></div>
+    <div class="sc sc-n"><div class="sl">Top Score</div><div class="sv">${data.length?Math.max(...data.map(d=>d.overall||0)).toFixed(1):'—'}</div><div class="ss">best rating</div></div>`;
+
+  const em={};
+  data.forEach(s=>{ if(!em[s.employee]) em[s.employee]={store:s.store,role:s.role,ov:[],v:0};
+    em[s.employee].ov.push(s.overall); em[s.employee].v++; });
+  const emps=Object.entries(em).map(([n,d])=>({name:n,store:d.store,role:d.role,visits:d.v,
+    overall:avg(d.ov.filter(Boolean))})).sort((a,b)=>(b.overall||0)-(a.overall||0));
+
+  document.getElementById('eCount').textContent = emps.length+' punonjës';
+  document.getElementById('empTable').innerHTML = !emps.length
+    ? '<div class="empty"><div class="empty-i">👤</div>No employee reviews submitted yet.</div>'
+    : '<table><thead><tr><th>Employee</th><th>Store</th><th>Role</th><th>Reviews</th><th>Avg Score</th></tr></thead><tbody>'
+      + emps.map(e=>`<tr><td><strong>${e.name}</strong></td><td>${e.store||'—'}</td><td style="color:var(--muted);font-size:11px">${e.role||'—'}</td>
+        <td style="text-align:center">${e.visits}</td>
+        <td><div class="sw"><div class="sb"><div class="sf ${sfCls(e.overall)}" style="width:${e.overall?e.overall/5*100:0}%"></div></div>
+        <span class="sn">${e.overall!=null?e.overall.toFixed(1):'—'}</span></div></td></tr>`).join('')+'</tbody></table>';
+
+  document.getElementById('empLog').innerHTML = !data.length
+    ? '<div class="empty"><div class="empty-i">🗒️</div>No reviews logged yet.</div>'
+    : '<table><thead><tr><th>Date</th><th>Employee</th><th>Store</th><th>Role</th><th>Reviewer</th><th>Score</th><th>Overall</th></tr></thead><tbody>'
+      + [...data].reverse().slice(0,20).map(s=>`<tr><td>${s.date}</td><td><strong>${s.employee}</strong></td>
+        <td>${s.store||'—'}</td><td style="color:var(--muted);font-size:11px">${s.role||'—'}</td>
+        <td style="color:var(--muted);font-size:11px">${s.reviewer}</td>
+        <td>${s.score!=null?s.score.toFixed(1):'—'}</td>
+        <td><span class="sn">${s.overall?s.overall.toFixed(1):'—'}</span></td></tr>`).join('')+'</tbody></table>';
+}
+</script>
+</body>
+</html>

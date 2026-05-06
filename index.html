@@ -695,7 +695,7 @@ input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.45);cursor:po
       <div id="rptStore">
         <div class="rpt-filt">
           <select class="fs" id="fType" onchange="renderRpt()"><option value="">Të gjitha llojet</option><option>Neptun</option><option>Franchise</option><option>Nova</option></select>
-          <select class="fs" id="fRev"  onchange="renderRpt()"><option value="">Të gjithë vlerësuesit</option><option>Artenca T.</option><option>Greta U.</option></select>
+          <select class="fs" id="fRev"  onchange="renderRpt()"><option value="">Të gjithë vlerësuesit</option><option>Artenca T.</option><option>Greta U.</option><option>Xheni K.</option></select>
           <select class="fs" id="fPer"  onchange="renderRpt()"><option value="">Gjithë koha</option><option value="7">7 ditët e fundit</option><option value="30">30 ditët e fundit</option></select>
         </div>
         <div class="stat-grid" id="statGrid"></div>
@@ -706,7 +706,7 @@ input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.45);cursor:po
       <!-- Employee reports -->
       <div id="rptEmp" style="display:none">
         <div class="rpt-filt">
-          <select class="fs" id="feRev" onchange="renderEmpRpt()"><option value="">Të gjithë vlerësuesit</option><option>Artenca T.</option><option>Greta U.</option></select>
+          <select class="fs" id="feRev" onchange="renderEmpRpt()"><option value="">Të gjithë vlerësuesit</option><option>Artenca T.</option><option>Greta U.</option><option>Xheni K.</option></select>
           <select class="fs" id="fePer" onchange="renderEmpRpt()"><option value="">Gjithë koha</option><option value="7">7 ditët e fundit</option><option value="30">30 ditët e fundit</option></select>
         </div>
         <div class="stat-grid" id="empStatGrid"></div>
@@ -730,14 +730,17 @@ input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.45);cursor:po
 // Artenca Employee PIN hash: 923af4835de7a46ff706aea75ff4ce19dc0878457bda631660e039b34f2105b7
 // Greta Store PIN hash:      96c56127d5ff132709622ca8baa85cd3c5e7aac98c38a5652a12f6e979d78a6d
 // Greta Employee PIN hash:   197a2971491b3b3aa2dc2891ee2395bc9f0b9d1de440fa7379f2b4b1ecfeb183
+// Xheni K. PIN hash:           e25f201f9014599e00073db598a2603a9c05766965336d9b9c68c3d4081ee9a3
 // ══════════════════════════════════════════
 
 // Single PIN per user — unlocks both forms
 // Artenca PIN: 2024  →  hash below
 // Greta PIN:   4056  →  hash below
+// Xheni PIN:   7391  →  hash below
 const CREDENTIALS = {
   'Artenca T.': '6557739a67283a8de383fc5c0997fbec7c5721a46f28f3235fc9607598d9016b',
-  'Greta U.':   '96c56127d5ff132709622ca8baa85cd3c5e7aac98c38a5652a12f6e979d78a6d'
+  'Greta U.':   '96c56127d5ff132709622ca8baa85cd3c5e7aac98c38a5652a12f6e979d78a6d',
+  'Xheni K.':   'e25f201f9014599e00073db598a2603a9c05766965336d9b9c68c3d4081ee9a3'
 };
 
 // Rate limiting: max 3 attempts, then 60s lockout

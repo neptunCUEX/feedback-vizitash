@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Udhëzues Udhëtimi – Afrika</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --amber:  #c8853a;
+      --deep:   #1e1209;
+      --earth:  #4a2e12;
+      --sand:   #f5ede0;
+      --ivory:  #faf7f2;
+      --rust:   #b54a20;
+      --sage:   #7a8c6e;
+      --text:   #2c1a0e;
+      --muted:  #7a6452;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--ivory);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* ── TOP NAV ── */
+    .topnav {
+      background: var(--deep);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      color: #fff;
+      font-size: 1.25rem;
+      letter-spacing: .04em;
+      text-decoration: none;
+    }
+    .logo span { color: var(--amber); }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a {
+      color: #ccc;
+      text-decoration: none;
+      font-size: .82rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--amber); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      height: 480px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+    .hero img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 40%;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(15,7,2,.85) 0%, rgba(15,7,2,.2) 60%, transparent 100%);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 40px 56px;
+      max-width: 780px;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: var(--amber);
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      margin-bottom: 14px;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      color: #fff;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.15;
+      font-weight: 900;
+      margin-bottom: 14px;
+    }
+    .hero p {
+      color: rgba(255,255,255,.75);
+      font-size: 1rem;
+      max-width: 580px;
+    }
+
+    /* ── TAB BAR ── */
+    .tabbar {
+      background: var(--earth);
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: none;
+    }
+    .tabbar::-webkit-scrollbar { display: none; }
+    .tabbar-inner {
+      display: inline-flex;
+      padding: 0 32px;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: rgba(255,255,255,.6);
+      font-family: 'Lato', sans-serif;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 16px 22px;
+      cursor: pointer;
+      transition: color .2s, border-color .2s;
+    }
+    .tab-btn:hover { color: #fff; }
+    .tab-btn.active {
+      color: var(--amber);
+      border-bottom-color: var(--amber);
+    }
+
+    /* ── LAYOUT ── */
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 48px;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 52px 32px;
+    }
+    @media (max-width: 800px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .hero-content { padding: 28px 24px; }
+      .topnav .nav-links { display: none; }
+    }
+
+    /* ── SECTIONS ── */
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .section-header {
+      border-left: 4px solid var(--amber);
+      padding-left: 18px;
+      margin-bottom: 32px;
+    }
+    .section-header .by {
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .section-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--earth);
+      line-height: 1.2;
+    }
+
+    .section-img {
+      width: 100%;
+      height: 320px;
+      object-fit: cover;
+      margin-bottom: 28px;
+      display: block;
+    }
+
+    .lead-text {
+      font-size: 1.08rem;
+      color: var(--text);
+      line-height: 1.8;
+      margin-bottom: 32px;
+    }
+
+    /* ── FACTS GRID ── */
+    .facts-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--earth);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e0d4c4;
+    }
+    .facts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 600px) { .facts-grid { grid-template-columns: 1fr; } }
+    .fact-card {
+      background: var(--sand);
+      border-left: 3px solid var(--amber);
+      padding: 14px 16px;
+      font-size: .88rem;
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .fact-card strong {
+      display: block;
+      color: var(--earth);
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 4px;
+    }
+
+    /* ── CHALLENGES BOX ── */
+    .challenge-box {
+      background: #fff;
+      border: 1px solid #e0d4c4;
+      padding: 24px 28px;
+      margin-bottom: 32px;
+    }
+    .challenge-box h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--rust);
+      margin-bottom: 14px;
+    }
+    .challenge-box ul {
+      padding-left: 18px;
+    }
+    .challenge-box ul li {
+      font-size: .9rem;
+      color: var(--text);
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+
+    /* ── QUOTE PULL ── */
+    .pull-quote {
+      border-top: 2px solid var(--amber);
+      border-bottom: 2px solid var(--amber);
+      padding: 22px 0;
+      margin: 32px 0;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.25rem;
+      color: var(--earth);
+      text-align: center;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar { }
+    .sidebar-card {
+      background: var(--sand);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .sidebar-card h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: var(--earth);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--amber);
+    }
+    .sidebar-card ul { padding-left: 0; list-style: none; }
+    .sidebar-card ul li {
+      font-size: .85rem;
+      color: var(--text);
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(0,0,0,.08);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sidebar-card ul li::before {
+      content: '→';
+      color: var(--amber);
+      font-size: .75rem;
+      flex-shrink: 0;
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(0,0,0,.08);
+      font-size: .85rem;
+    }
+    .stat-row .num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--amber);
+      font-weight: 700;
+    }
+    .author-card {
+      background: var(--deep);
+      color: #fff;
+      padding: 20px 24px;
+    }
+    .author-card .role {
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--amber);
+      margin-bottom: 4px;
+    }
+    .author-card .name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--deep);
+      color: rgba(255,255,255,.5);
+      text-align: center;
+      font-size: .78rem;
+      padding: 24px;
+      letter-spacing: .06em;
+    }
+    footer span { color: var(--amber); }
+  </style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <a class="logo" href="#">Afrika <span>Eksploro</span></a>
+  <ul class="nav-links">
+    <li><a href="#">Destinacionet</a></li>
+    <li><a href="#">Llojet e Udhëtimit</a></li>
+    <li><a href="#">Guidat</a></li>
+    <li><a href="#">Rreth Nesh</a></li>
+    <li><a href="#">Na Kontaktoni</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <img src="https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1600&q=80" alt="Afrika" />
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <span class="hero-badge">Udhëzues Udhëtimi</span>
+    <h1>Udhëzues i Plotë për Afrikën</h1>
+    <p>Zbuloni kontinentin më të gjallë në botë – nga safaret e mrekullueshme deri te plazhet kristalore dhe monumentet e lashta.</p>
+  </div>
+</div>
+
+<!-- TAB BAR -->
+<div class="tabbar">
+  <div class="tabbar-inner">
+    <button class="tab-btn active" onclick="showTab('t1',this)">Safari &amp; Biodiversiteti</button>
+    <button class="tab-btn" onclick="showTab('t2',this)">Plazhet &amp; Ishujt</button>
+    <button class="tab-btn" onclick="showTab('t3',this)">Trashëgimia Historike</button>
+    <button class="tab-btn" onclick="showTab('t4',this)">Aventura &amp; Sportet</button>
+    <button class="tab-btn" onclick="showTab('t5',this)">Turizmi &amp; Sfidat</button>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="layout">
+
+  <!-- ═══════════ SECTION 1 ═══════════ -->
+  <main>
+    <article id="t1" class="section active">
+      <div class="section-header">
+        <p class="by">Autori: Nuel</p>
+        <h2>Safari dhe Biodiversiteti</h2>
+      </div>
+      <img class="section-img"
+        src="https://images.unsplash.com/photo-1549366021-9f761d450615?w=900&q=80"
+        alt="Safari në Afrikë" />
+      <p class="lead-text">
+        Afrika është kontinenti me biodiversitetin më të pasur në botë, ku jetojnë mbi <strong>1,100 specie gjitarësh</strong> dhe mijëra lloje zogjsh dhe bimësh. Safaret afrikane janë ndër përvojat më mbresëlënëse që ofron planeti ynë, duke të çuar direkt në zemër të natyrës së egër.
+      </p>
+
+      <h3 class="facts-heading">Parqet Kombëtare më të Famshme</h3>
+      <div class="facts-grid">
+        <div class="fact-card"><strong>Maasai Mara – Kenia</strong>Vendtakimi i migrimit të madh dhe habitati i luanëve të famshëm të Afrikës Lindore.</div>
+        <div class="fact-card"><strong>Serengeti – Tanzania</strong>Parku i pasurisë biologjike, me sipërfaqe prej mbi 14,750 km², shtëpi e mijëra kafshëve.</div>
+        <div class="fact-card"><strong>Kruger National Park – Afrika e Jugut</strong>Njëri nga parqet më të mëdha dhe më të vizituara në kontinentin afrikan.</div>
+        <div class="fact-card"><strong>"Big Five"</strong>Elefanti, luani, bufali, leopardi dhe rinoceronti – termi i krijuar nga gjuetarët e shekullit 19-të.</div>
+      </div>
+
+      <div class="pull-quote">
+        "Çdo vit, mbi 2 milion kafshë kalojnë migrimin sezonale në kërkim të ushqimit."
+      </div>
+
+      <h3 class="facts-heading">Fakte Interesante</h3>
+      <div class="facts-grid">
+        <div class="fact-card"><strong>Elefantët</strong>Konsumojnë deri në 150 kg ushqim në ditë dhe kanë kujtesë shumëvjeçare.</div>
+        <div class="fact-card"><strong>Luanët</strong>Jetojnë në koloni me hierarki komplekse sociale, të drejtuara kryesisht nga femrat.</div>
+        <div class="fact-card"><strong>Zebratat &amp; Gjirafat</strong>Bashkojnë forcat gjatë migrimit për siguri dhe orientim në hapësirat e gjera.</div>
+        <div class="fact-card"><strong>Turizmi i Qëndrueshëm</strong>Komunitetet lokale janë pjesë e menaxhimit të parqeve, duke përfituar drejtpërdrejt.</div>
+      </div>
+
+      <div class="challenge-box">
+        <h3>⚠ Sfidat Kryesore</h3>
+        <ul>
+          <li>Gjuetia ilegale kërcënon në mënyrë serioze rinocerontët dhe elefantët.</li>
+          <li>Ndryshimet klimatike ndryshojnë modelet e migrimit dhe disponueshmërinë e ujit.</li>
+          <li>Shkatërrimi i habitatit natyror nga zhvillimi urban dhe bujqësia intensive.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ═══════════ SECTION 2 ═══════════ -->
+    <article id="t2" class="section">
+      <div class="section-header">
+        <p class="by">Autori: Erlis</p>
+        <h2>Plazhet dhe Ishujt Tropikalë</h2>
+      </div>
+      <img class="section-img"
+        src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900&q=80"
+        alt="Plazhe tropikale në Afrikë" />
+      <p class="lead-text">
+        Afrika fsheh disa nga destinacionet bregdetare më spektakolare në botë. Nga arkipelagu i Seychelles-it deri te rërat e arta të Mozambikut, ujërat kristalor dhe ekosistemet detare të pasura bëjnë këto vende paradis të vërtetë.
+      </p>
+
+      <h3 class="facts-heading">Destinacionet Kryesore</h3>
+      <div class="facts-grid">
+        <div class="fact-card"><strong>Seychelles</strong>Mbi 100 ishuj, disa të pabanuar. Koralet mbulojnë rreth 1,500 km² dhe strehojnë biodiversitet detar unik.</div>
+        <div class="fact-card"><strong>Mauritius</strong>Lagune të mbrojtura, reef koralor dhe ujëra të ngrohta ideale për zhytje dhe snorkling.</div>
+        <div class="fact-card"><strong>Zanzibar – Tanzania</strong>Uji turkoiz, rëra e bardhë dhe historia e pasur – Stone Town është Trashëgimi Botërore e UNESCO-s.</div>
+        <div class="fact-card"><strong>Mozambik</strong>Bregdeti i gjatë me plazhe të paprekura dhe parqe detare të mbrojtura.</div>
+      </div>
+
+      <div class="pull-quote">
+        "Breshkat detare përdorin këto plazhe për të vendosur vezët e tyre – specie të rrezikuara që kërkojnë mbrojtje."
+      </div>
+
+      <h3 class="facts-heading">Fakte Interesante</h3>
+      <div class="facts-grid">
+        <div class="fact-card"><strong>Diversiteti Detar</strong>Reefet koralore afrikane strehojnë qindra specie peshqish, molluskësh dhe kërpudhave detare.</div>
+        <div class="fact-card"><strong>Stone Town</strong>Qyteti historik i Zanzibarit, me labirintet e tij të ngushtë dhe arkitekturën arabe-swahili.</div>
+        <div class="fact-card"><strong>Turizmi i Përgjegjshëm</strong>Vizitat e turistëve te folenet e breshkave janë të rregulluara për të shmangur shqetësimin e tyre.</div>
+        <div class="fact-card"><strong>Ngjyra e Ujit</strong>Uji kristal i kaltër buron nga thellësia minimale dhe algat e brendshme të reefeve.</div>
+      </div>
+
+      <div class="challenge-box">
+        <h3>⚠ Sfidat Kryesore</h3>
+        <ul>
+          <li>Turizmi masiv dhe mbetjet plastike dëmtojnë habitatin detar dhe koralet.</li>
+          <li>Ngritja e nivelit të detit dhe temperatura e rritur e ujit zbardhin koralet.</li>
+          <li>Peshkimi i pakontrolluar redukton biodiversitetin e ekosistemeve detare.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ═══════════ SECTION 3 ═══════════ -->
+    <article id="t3" class="section">
+      <div class="section-header">
+        <p class="by">Autori: Marko</p>
+        <h2>Trashëgimia Historike dhe Arkeologjike</h2>
+      </div>
+      <img class="section-img"
+        src="https://images.unsplash.com/photo-1539768942893-daf3538a6e0c?w=900&q=80"
+        alt="Piramidat e Egjiptit" />
+      <p class="lead-text">
+        Afrika është djep i qytetërimeve njerëzore. Me monumente historike që datojnë mijëra vjet më parë dhe qendra të lashta diturie e tregtie, kontinenti afron një udhëtim nëpër shtresat e historisë botërore.
+      </p>
+
+      <h3 class="facts-heading">Vendet Kryesore Historike</h3>
+      <div class="facts-grid">
+        <div class="fact-card"><strong>Piramidat e Gizës – Egjipt</strong>Ndërtuar rreth 4,500 vjet më parë, janë ndër monumentet më të vjetra të ruajtura dhe një nga Shtatë Mrekullitë e Botës Antike.</div>
+        <div class="fact-card"><strong>Tempujt e Luxor &amp; Karnak</strong>Qendra fetare dhe kulturore me rëndësi të madhe për qytetërimin faraonike të Egjiptit të Lashtë.</div>
+        <div class="fact-card"><strong>Timbuktu – Mali</strong>Qendra e madhe e dijes dhe tregtisë në shek. 15–16, me bibliotekat që ruajnë mijëra dorëshkrime të vjetra.</div>
+        <div class="fact-card"><strong>Great Zimbabwe</strong>Qytet i gurit i ndërtuar në shek. 11, dëshmi e aftësive inxhinierike të jashtëzakonshme të popujve afrikanë.</div>
+      </div>
+
+      <div class="pull-quote">
+        "Piramidat e Gizës janë të vetmet monument i Shtatë Mrekullive të Botës Antike që ekziston ende sot."
+      </div>
+
+      <h3 class="facts-heading">Fakte Interesante</h3>
+      <div class="facts-grid">
+        <div class="fact-card"><strong>Rrugët Tregtare</strong>Shumë nga këto qendra ishin nyje kyçe të rrugëve tregtare transsahariane dhe detare.</div>
+        <div class="fact-card"><strong>Dorëshkrimet e Timbuktu</strong>Ruhen mbi 700,000 dorëshkrime të vjetra, shumë ende të pakataloguara.</div>
+        <div class="fact-card"><strong>Aksesueshmëria</strong>Piramidat dhe tempujt janë ende të vizitueshëm dhe pranojnë miliona turistë çdo vit.</div>
+        <div class="fact-card"><strong>Arkeologjia Active</strong>Gërmime të reja po zbulojnë vazhdimisht qytetërime dhe artefakte të panjohura më parë.</div>
+      </div>
+
+      <div class="challenge-box">
+        <h3>⚠ Sfidat Kryesore</h3>
+        <ul>
+          <li>Vjedhja dhe kontrabanda e artefakteve historike drejt tregjeve ndërkombëtare.</li>
+          <li>Dëmtimi i strukturave nga turizmi i pakontrolluar dhe kushtet klimatike.</li>
+          <li>Konfliktet e armatosura në disa zona rrezikojnë trashëgiminë kulturore.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ═══════════ SECTION 4 ═══════════ -->
+    <article id="t4" class="section">
+      <div class="section-header">
+        <p class="by">Autori: Arbion</p>
+        <h2>Aventurat dhe Sportet Ekstreme</h2>
+      </div>
+      <img class="section-img"
+        src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=900&q=80"
+        alt="Kilimanjaro dhe aventura" />
+      <p class="lead-text">
+        Afrika është parajsa e aventurierëve. Nga majat e akullta të Kilimanjaros deri te pyjet e dendura të Ruandës ku jetojnë gorillat e maleve, kontinenti ofron përvoja që sfidojnë kufijtë fizikë dhe mendorë.
+      </p>
+
+      <h3 class="facts-heading">Aktivitetet Kryesore</h3>
+      <div class="facts-grid">
+        <div class="fact-card"><strong>Kilimanjaro – Tanzania</strong>Maja më e lartë afrikanem 5,895 m. Ngjitja kalon 5 zona klimatike nga pyjet tropikale deri te akullnajat e majës.</div>
+        <div class="fact-card"><strong>Trekking me Gorilla</strong>Uganda, Ruanda dhe DR Kongo. Vizita të kufizuara dhe të kontrolluara për mbrojtjen e kësaj specie të rrezikuar.</div>
+        <div class="fact-card"><strong>Sahara – Eksplorime</strong>Udhëtime me jeep, deve dhe trekking në shkretëtirën më të madhe të botës – një eksperiencë e paharrueshme.</div>
+        <div class="fact-card"><strong>Safari me Këmbë</strong>Shëtitje në natyrën e egër me guidë vendase – kontakt i drejtpërdrejtë me faunën dhe florën.</div>
+      </div>
+
+      <div class="pull-quote">
+        "Kilimanjaron e vizitojnë mbi 30,000 turistë çdo vit – dhe ngjitja nuk kërkon pajisje alpinistike të specializuara."
+      </div>
+
+      <h3 class="facts-heading">Fakte Interesante</h3>
+      <div class="facts-grid">
+        <div class="fact-card"><strong>5 Zona Klimatike</strong>Kilimanjaro kalon nga ekuatori tropical deri në ngrirje arktike brenda vetëm disa ditëve ngjitje.</div>
+        <div class="fact-card"><strong>Gorillat e Maleve</strong>Vetëm rreth 1,000 individë mbeten në botë – çdo permit vizite ndihmon drejtpërdrejt ruajtjen e tyre.</div>
+        <div class="fact-card"><strong>Kosto e Lartë</strong>Trekkingu me gorilla është ndër aktivitetet turistike më të shtrenjta – me qëllim limitimin e numrit të vizitorëve.</div>
+        <div class="fact-card"><strong>Sahara</strong>Me 9 milion km², është shkretëtira e nxehtë më e madhe në botë, me duna që arrijnë 180 metër.</div>
+      </div>
+
+      <div class="challenge-box">
+        <h3>⚠ Sfidat Kryesore</h3>
+        <ul>
+          <li>Turizmi ekstrem i paqëndrueshëm mund të dëmtojë mjedisin natyror të zonave të largëta.</li>
+          <li>Mbetjet e lëna nga turistët ndotin habitatet e brishta malore dhe shkretërore.</li>
+          <li>Presioni mbi komunitetet lokale nga flukset e mëdha të turistëve aventuristuara.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ═══════════ SECTION 5 ═══════════ -->
+    <article id="t5" class="section">
+      <div class="section-header">
+        <p class="by">Autori: Matia</p>
+        <h2>Turizmi dhe Sfidat Sociale / Mjedisore</h2>
+      </div>
+      <img class="section-img"
+        src="https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=900&q=80"
+        alt="Komunitetet lokale afrikane" />
+      <p class="lead-text">
+        Turizmi afrikane sjell miliarda dollarë çdo vit dhe është shtyllë e ekonomive të Kenias, Tanzanisë, Marokut dhe Afrikës së Jugut. Por pas këtij suksesi fshihen sfida reale – sociale, shëndetësore dhe mjedisore – që kërkojnë vëmendje të veçantë.
+      </p>
+
+      <h3 class="facts-heading">Sfidat Kryesore</h3>
+      <div class="facts-grid">
+        <div class="fact-card"><strong>1. Sëmundjet</strong>Malaria, ebola dhe kolera reduktojnë numrin e vizitorëve dhe rrezikojnë si turistët ashtu edhe komunitetet pritëse.</div>
+        <div class="fact-card"><strong>2. Paqëndrueshmëria Politike</strong>Konfliktet civile në vende si Sudani i Jugut ose DR Kongo e bëjnë turizmin të pasigurt ose të pamundur.</div>
+        <div class="fact-card"><strong>3. Infrastruktura e Dobët</strong>Mungesa e rrugëve, spitaleve dhe shërbimeve bazë kufizon aksesin turistik në shumë rajone potenciale.</div>
+        <div class="fact-card"><strong>4. Ndikimi Mjedisor</strong>Turizmi i paqëndrueshëm prodhon mbeturina, ndotje të ujit dhe shkatërrim të ekosistemeve natyrore.</div>
+      </div>
+
+      <div class="fact-card" style="margin-bottom:14px">
+        <strong>5. Humbja e Kulturës</strong>Turizmi masiv rrezikon të ndryshojë mënyrën e jetesës së komuniteteve lokale dhe të fshijë traditat e lashta.
+      </div>
+
+      <div class="pull-quote">
+        "Turizmi i qëndrueshëm krijon vende pune dhe mundësi arsimore – duke ndihmuar zhvillimin ekonomik pa sakrifikuar natyrën."
+      </div>
+
+      <h3 class="facts-heading">Shembuj Pozitivë</h3>
+      <div class="facts-grid">
+        <div class="fact-card"><strong>Shpëtimi i Kafshëve</strong>Turistët mund të marrin pjesë aktive në programe rehabilitimi të kafshëve të plagosura ose të brakisura.</div>
+        <div class="fact-card"><strong>Pastrimi i Plazheve</strong>Iniciativa lokale dhe ndërkombëtare organizojnë vullnetarë turistë për pastrimin e bregdeteve.</div>
+        <div class="fact-card"><strong>Vizitat Edukative</strong>Fshatra tradicionale ofrojnë programe ku turistët mësojnë zakonet, gatimin dhe zejet vendase.</div>
+        <div class="fact-card"><strong>Parqet &amp; Komunitetet</strong>Safari dhe parqe kombëtare ndajnë të ardhurat me komunitetet fqinje për zhvillim lokal.</div>
+      </div>
+
+      <div class="challenge-box">
+        <h3>⚠ Të Mbajmë Parasysh</h3>
+        <ul>
+          <li>Zgjidhni operatorë turistikë të certifikuar për turizëm të qëndrueshëm.</li>
+          <li>Respektoni kulturat dhe traditat lokale gjatë çdo vizite.</li>
+          <li>Minimizoni gjurmën tuaj ekologjike – pakësoni plastikën dhe mbetjet.</li>
+          <li>Blini produkte dhe shërbime nga prodhuesit vendas të zonës.</li>
+        </ul>
+      </div>
+    </article>
+  </main>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div id="author-card" class="author-card" style="margin-bottom:24px">
+      <p class="role">Autori i Seksionit</p>
+      <p class="name" id="author-name">Nuel</p>
+    </div>
+
+    <div class="sidebar-card">
+      <h4>Statistika të Shpejta</h4>
+      <div class="stat-row">
+        <span>Specie gjitarësh</span>
+        <span class="num">1,100+</span>
+      </div>
+      <div class="stat-row">
+        <span>Parqe kombëtare</span>
+        <span class="num">330+</span>
+      </div>
+      <div class="stat-row">
+        <span>Kafshë migruese/vit</span>
+        <span class="num">2M+</span>
+      </div>
+      <div class="stat-row">
+        <span>Ishuj Seychelles</span>
+        <span class="num">100+</span>
+      </div>
+      <div class="stat-row">
+        <span>Lartësia Kilimanjaro</span>
+        <span class="num">5,895m</span>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <h4>Temat e Udhëzuesit</h4>
+      <ul>
+        <li>Safari dhe Biodiversiteti</li>
+        <li>Plazhet dhe Ishujt</li>
+        <li>Trashëgimia Historike</li>
+        <li>Aventura dhe Sportet</li>
+        <li>Turizmi dhe Sfidat</li>
+      </ul>
+    </div>
+
+    <div class="sidebar-card">
+      <h4>Destinacione të Rekomanduara</h4>
+      <ul>
+        <li>Maasai Mara, Kenia</li>
+        <li>Serengeti, Tanzania</li>
+        <li>Seychelles</li>
+        <li>Zanzibar</li>
+        <li>Piramidat e Gizës</li>
+        <li>Kilimanjaro</li>
+        <li>Okavango Delta</li>
+        <li>Kruger National Park</li>
+      </ul>
+    </div>
+
+    <div class="sidebar-card">
+      <h4>Koha Më e Mirë për të Vizituar</h4>
+      <div class="stat-row"><span>Safari (thatë)</span><span><strong>Qer–Tetor</strong></span></div>
+      <div class="stat-row"><span>Plazhet Tropikale</span><span><strong>Maj–Shtator</strong></span></div>
+      <div class="stat-row"><span>Kilimanjaro</span><span><strong>Jan–Mar</strong></span></div>
+      <div class="stat-row"><span>Migrimi i Madh</span><span><strong>Korrik–Gusht</strong></span></div>
+    </div>
+  </aside>
+
+</div><!-- /layout -->
+
+<footer>
+  &copy; 2025 <span>Afrika Eksploro</span> &nbsp;|&nbsp; Udhëzues Udhëtimi në Shqip &nbsp;|&nbsp; Të gjitha të drejtat e rezervuara
+</footer>
+
+<script>
+  const authors = {
+    t1: 'Nuel', t2: 'Erlis', t3: 'Marko', t4: 'Arbion', t5: 'Matia'
+  };
+
+  function showTab(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+    document.getElementById('author-name').textContent = authors[id];
+    window.scrollTo({ top: document.querySelector('.tabbar').offsetTop - 60, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>

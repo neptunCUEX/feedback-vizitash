@@ -336,6 +336,51 @@
       letter-spacing: .06em;
     }
     footer span { color: var(--amber); }
+
+    /* ── FOOD DISH CARDS ── */
+    .dish-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 600px) { .dish-grid { grid-template-columns: 1fr; } }
+    .dish-card {
+      background: #fff;
+      border: 1px solid #e0d4c4;
+      overflow: hidden;
+    }
+    .dish-card-img { width: 100%; height: 160px; object-fit: cover; display: block; }
+    .dish-card-body { padding: 16px; }
+    .dish-card-country {
+      font-size: .7rem; text-transform: uppercase; letter-spacing: .12em;
+      color: var(--amber); font-weight: 700; margin-bottom: 4px;
+    }
+    .dish-card-name {
+      font-family: 'Playfair Display', serif; font-size: 1.1rem;
+      color: var(--earth); margin-bottom: 8px;
+    }
+    .dish-card-body p { font-size: .87rem; color: var(--text); line-height: 1.65; }
+    .opening-quote {
+      background: var(--deep); color: #fff; padding: 24px 28px; margin-bottom: 32px;
+      font-family: 'Playfair Display', serif; font-style: italic;
+      font-size: 1.1rem; line-height: 1.6; border-left: 4px solid var(--amber);
+    }
+    .opinion-box {
+      background: var(--sand); padding: 24px 28px;
+      margin-top: 32px; border-top: 3px solid var(--sage);
+    }
+    .opinion-box .opinion-label {
+      font-size: .7rem; text-transform: uppercase; letter-spacing: .12em;
+      color: var(--sage); font-weight: 700; margin-bottom: 8px;
+    }
+    .opinion-box p { font-size: .92rem; color: var(--text); line-height: 1.75; font-style: italic; }
+    .closing-card { background: var(--earth); color: #fff; padding: 28px 32px; margin-top: 32px; }
+    .closing-card h3 {
+      font-family: 'Playfair Display', serif; font-size: 1.3rem;
+      color: var(--amber); margin-bottom: 12px;
+    }
+    .closing-card p { font-size: .93rem; line-height: 1.75; color: rgba(255,255,255,.85); }
   </style>
 </head>
 <body>
@@ -365,6 +410,7 @@
     <button class="tab-btn" onclick="showTab('t3',this)">Trashëgimia Historike</button>
     <button class="tab-btn" onclick="showTab('t4',this)">Aventura &amp; Sportet</button>
     <button class="tab-btn" onclick="showTab('t5',this)">Turizmi &amp; Sfidat</button>
+    <button class="tab-btn" onclick="showTab('t6',this)">🍽 Ushqimet Tradicionale</button>
   </div>
 </div>
 
@@ -375,7 +421,7 @@
   <main>
     <article id="t1" class="section active">
       <div class="section-header">
-        <p class="by">Autori: Matia</p>
+        <p class="by">Autori: Nuel</p>
         <h2>Safari dhe Biodiversiteti</h2>
       </div>
       <img class="section-img"
@@ -418,7 +464,7 @@
     <!-- ═══════════ SECTION 2 ═══════════ -->
     <article id="t2" class="section">
       <div class="section-header">
-        <p class="by">Autori: Matia</p>
+        <p class="by">Autori: Erlis</p>
         <h2>Plazhet dhe Ishujt Tropikalë</h2>
       </div>
       <img class="section-img"
@@ -461,7 +507,7 @@
     <!-- ═══════════ SECTION 3 ═══════════ -->
     <article id="t3" class="section">
       <div class="section-header">
-        <p class="by">Autori: Matia</p>
+        <p class="by">Autori: Marko</p>
         <h2>Trashëgimia Historike dhe Arkeologjike</h2>
       </div>
       <img class="section-img"
@@ -504,7 +550,7 @@
     <!-- ═══════════ SECTION 4 ═══════════ -->
     <article id="t4" class="section">
       <div class="section-header">
-        <p class="by">Autori: Matia</p>
+        <p class="by">Autori: Arbion</p>
         <h2>Aventurat dhe Sportet Ekstreme</h2>
       </div>
       <img class="section-img"
@@ -591,13 +637,88 @@
         </ul>
       </div>
     </article>
+
+    <!-- ═══════════ SECTION 6 ═══════════ -->
+    <article id="t6" class="section">
+      <div class="section-header">
+        <p class="by">Autori: Migel</p>
+        <h2>Ushqimet Tradicionale të Afrikës</h2>
+      </div>
+
+      <div class="opening-quote">
+        "Nëse mendon se pica është e mirë, prit të dëgjosh çfarë gatuajnë në Afrikë dhe pastaj fol…"
+      </div>
+
+      <img class="section-img"
+        src="https://images.unsplash.com/photo-1567529684892-09290a1b2d05?w=900&q=80"
+        alt="Ushqimet afrikane" />
+
+      <p class="lead-text">
+        Afrika — 54 vende, 3000 kultura, një kuzhinë për çdo shije. Kontinenti që nuk e njeh askush sa duhet fsheh mes erëzave, zjarrit dhe traditës disa nga gjellët më të pasura dhe më karakteristike të botës.
+      </p>
+
+      <h3 class="facts-heading">Gjellët Kryesore</h3>
+      <div class="dish-grid">
+        <div class="dish-card">
+          <img class="dish-card-img" src="https://images.unsplash.com/photo-1547592180-85f173990554?w=600&q=80" alt="Tajine" />
+          <div class="dish-card-body">
+            <p class="dish-card-country">Maroku</p>
+            <p class="dish-card-name">Tajine</p>
+            <p>Mish qengji me kumbulla të thata, bajame dhe erëza si shafran e kanellë, gatuar <strong>4 orë</strong> në enë balte. Mishi bie vetë nga kocka — nuk ke nevojë as për thikë. Gatuhet çdo të premte si traditë familjare.</p>
+          </div>
+        </div>
+        <div class="dish-card">
+          <img class="dish-card-img" src="https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=600&q=80" alt="Jollof Rice" />
+          <div class="dish-card-body">
+            <p class="dish-card-country">Nigeria</p>
+            <p class="dish-card-name">Jollof Rice</p>
+            <p>Oriz i gatuar me domate, piper të kuq dhe erëza të forta. Gjella më e famshme e Afrikës Perëndimore. Nigeria dhe Gana kanë një <strong>debat prej dekadash</strong> se kush e bën më mirë — debate serioze, jo shaka.</p>
+          </div>
+        </div>
+        <div class="dish-card">
+          <img class="dish-card-img" src="https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=600&q=80" alt="Injera" />
+          <div class="dish-card-body">
+            <p class="dish-card-country">Etiopia</p>
+            <p class="dish-card-name">Injera &amp; Doro Wat</p>
+            <p>Injera është bukë e thartë si sfungjer nga drithi <strong>teff</strong> që rritet vetëm në Etiopi. Hidhen gjella mbi të dhe të gjithë hanë me duar. Doro Wat — pulë me vezë të ziera në salcë pikante me 10 erëza — është gjella kombëtare.</p>
+          </div>
+        </div>
+        <div class="dish-card">
+          <img class="dish-card-img" src="https://images.unsplash.com/photo-1544025162-d76538825b66?w=600&q=80" alt="Braai" />
+          <div class="dish-card-body">
+            <p class="dish-card-country">Afrika e Jugut</p>
+            <p class="dish-card-name">Biltong &amp; Braai</p>
+            <p>Biltong është mish viçi i marinuar me uthull dhe erëza, i tharë në ajër <strong>5–7 ditë</strong>. Braai është barbeku kombëtar — çdo fundjavë, çdo familje, si fe e dytë.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pull-quote">
+        "Në Zimbabve dhe Zambia, karkaleca dhe krimba druri skuqen në vaj — dhe kanë më shumë proteina se viçi."
+      </div>
+
+      <div class="fact-card" style="margin-bottom:32px; font-size:.93rem; padding:18px 20px;">
+        <strong>💡 Fakti më Interesant</strong>
+        Mopane Worm — krimba e drurit — është ndër burimet më të pasura të proteinave në botë. Herën tjetër që ankohesh për darkën, kujtohu që dikush po ha krimba me qejf.
+      </div>
+
+      <div class="closing-card">
+        <h3>Mbyllja</h3>
+        <p>"Pra herën tjetër që dikush thotë 'nuk di çfarë të ha sonte' — dërgojani këtë prezantim. Afrika ka ushqyer miliarda njerëz prej mijëra vitesh pa receta Google, pa Glovo dhe pa mikrovalë. Ndërsa ne s'mund të vendosim mes picës dhe burgerit — ata gatuajnë me argjilë dhe hanë insekte me kënaqësi. Civilizimi i vërtetë fillon në kuzhinë — dhe Afrika e filloi mijëra vjet para nesh."</p>
+      </div>
+
+      <div class="opinion-box">
+        <p class="opinion-label">✍ Mendimi Personal i Autorit</p>
+        <p>"Unë them se Afrika është një vend që ia vlen për t'u parë, sepse ajo ka shumëllojshmëri gjërash të cilat ne, si turistë, do të dëshironim t'i provonim një herë. Edhe pse Afrikën e konsiderojnë si një ndër vendet më të pista, Afrika është një vend i cili ia vlen për t'u vizituar sepse ruan traditat dhe zakonet e tyre pa turp. Edhe pse neve na duken si diçka jo normale, të gjithë dëshirojmë t'i provojmë një herë ato ushqime misterioze."</p>
+      </div>
+    </article>
   </main>
 
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <div id="author-card" class="author-card" style="margin-bottom:24px">
       <p class="role">Autori i Seksionit</p>
-      <p class="name" id="author-name">Matia</p>
+      <p class="name" id="author-name">Nuel</p>
     </div>
 
     <div class="sidebar-card">
@@ -632,6 +753,7 @@
         <li>Trashëgimia Historike</li>
         <li>Aventura dhe Sportet</li>
         <li>Turizmi dhe Sfidat</li>
+        <li>Ushqimet Tradicionale</li>
       </ul>
     </div>
 
@@ -666,7 +788,7 @@
 
 <script>
   const authors = {
-    t1: 'Matia', t2: 'Matia', t3: 'Matia', t4: 'Matia', t5: 'Matia'
+    t1: 'Nuel', t2: 'Erlis', t3: 'Marko', t4: 'Arbion', t5: 'Matia', t6: 'Migel'
   };
 
   function showTab(id, btn) {

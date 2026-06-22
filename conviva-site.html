@@ -137,6 +137,7 @@
     </a>
     <nav class="menu" id="menu">
       <a href="#services" data-i18n="nav.services">Shërbimet</a>
+      <a href="#team" data-i18n="nav.team">Ekipi</a>
       <a href="#about" data-i18n="nav.about">Rreth nesh</a>
       <a href="#process" data-i18n="nav.process">Procesi</a>
       <a href="#contact" data-i18n="nav.contact">Kontakt</a>
@@ -193,6 +194,54 @@
         <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg></div>
         <h3 data-i18n="s4.title">Menaxhim Klientësh</h3>
         <p data-i18n="s4.desc">Strategji për përvojën e mysafirëve dhe CRM që ndërtojnë besnikëri dhe i kthejnë mysafirët.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Team / Who we are -->
+<section id="team">
+  <style>
+    .exp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:6px}
+    .exp{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px 22px;transition:.3s}
+    .exp:hover{transform:translateY(-4px);box-shadow:0 18px 40px -24px rgba(39,20,25,.4);border-color:transparent}
+    .exp .ti{flex:0 0 auto;width:44px;height:44px;border-radius:12px;background:var(--rose);color:var(--brand);display:flex;align-items:center;justify-content:center}
+    .exp .ti svg{width:22px;height:22px}
+    .exp h3{font-size:1.1rem;margin-bottom:3px}
+    .exp p{color:var(--soft);font-size:.92rem;line-height:1.5}
+    @media(max-width:860px){.exp-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.exp-grid{grid-template-columns:1fr}}
+  </style>
+  <div class="wrap">
+    <div class="sec-head rv" style="margin-bottom:38px">
+      <div class="eyebrow" data-i18n="team.eyebrow">Kush jemi</div>
+      <h2 data-i18n="team.title">Një ekip profesionistësh të mikpritjes</h2>
+      <p data-i18n="team.body">Conviva është një ekip profesionistësh të mikpritjes, me përvojë në kompani shqiptare dhe ndërkombëtare. Sjellim njohuri praktike në çdo aspekt të biznesit hotelier — nga drejtimi ekzekutiv te financa, shitjet dhe logjistika.</p>
+    </div>
+    <div class="exp-grid">
+      <div class="exp rv">
+        <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></div>
+        <div><h3 data-i18n="team.e1t">Drejtim Ekzekutiv</h3><p data-i18n="team.e1d">Përvojë drejtuese në nivel CEO, nga strategjia te vendimmarrja.</p></div>
+      </div>
+      <div class="exp rv">
+        <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></div>
+        <div><h3 data-i18n="team.e2t">Financë</h3><p data-i18n="team.e2d">Menaxhim financiar, buxhetim dhe kontroll kostosh për struktura hoteliere.</p></div>
+      </div>
+      <div class="exp rv">
+        <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17l6-6 4 4 7-7M14 8h7v7"/></svg></div>
+        <div><h3 data-i18n="team.e3t">Shitje</h3><p data-i18n="team.e3d">Strategji shitjesh dhe rritje të të ardhurave nga mysafirët.</p></div>
+      </div>
+      <div class="exp rv">
+        <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h11v9H3zM14 9h4l3 3v3h-7z"/><circle cx="7.5" cy="17" r="1.6"/><circle cx="17.5" cy="17" r="1.6"/></svg></div>
+        <div><h3 data-i18n="team.e4t">Logjistikë</h3><p data-i18n="team.e4d">Zinxhir furnizimi dhe operacione të organizuara me efikasitet.</p></div>
+      </div>
+      <div class="exp rv">
+        <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg></div>
+        <div><h3 data-i18n="team.e5t">Operacione</h3><p data-i18n="team.e5d">Standardizim procesesh dhe operacione të përditshme pa pengesa.</p></div>
+      </div>
+      <div class="exp rv">
+        <div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11v2a1 1 0 0 0 1 1h2l4 4V6L6 10H4a1 1 0 0 0-1 1ZM14 8a4 4 0 0 1 0 8M16.5 5a8 8 0 0 1 0 14"/></svg></div>
+        <div><h3 data-i18n="team.e6t">Marketing</h3><p data-i18n="team.e6d">Pozicionim marke dhe komunikim që tërheq mysafirët e duhur.</p></div>
       </div>
     </div>
   </div>
@@ -284,6 +333,7 @@
       "s4.title":"Menaxhim Klientësh","s4.desc":"Strategji për përvojën e mysafirëve dhe CRM që ndërtojnë besnikëri dhe i kthejnë mysafirët.",
       "about.eyebrow":"Pse Conviva","about.title":"Ekspertizë praktike, jo vetëm këshilla","about.p1":"Conviva sjell ekspertizë praktike në mikpritje për hotele në të gjithë Shqipërinë dhe rajonin e Ballkanit. Nuk ofrojmë vetëm këshilla — punojmë krah ekipit tuaj, vendosim standarde të matshme dhe qëndrojmë derisa rezultatet të duken.","about.p2":"Qasja jonë ndërthur praktikat më të mira ndërkombëtare me njohuri të thella të tregut vendas.",
       "about.stat1":"Vite eksperiencë në industri","about.stat2":"Tregje në rajon","about.stat3":"Fokus te përvoja e mysafirit","about.stat4":"Përkushtim ndaj cilësisë",
+      "nav.team":"Ekipi","team.eyebrow":"Kush jemi","team.title":"Një ekip profesionistësh të mikpritjes","team.body":"Conviva është një ekip profesionistësh të mikpritjes, me përvojë në kompani shqiptare dhe ndërkombëtare. Sjellim njohuri praktike në çdo aspekt të biznesit hotelier — nga drejtimi ekzekutiv te financa, shitjet dhe logjistika.","team.e1t":"Drejtim Ekzekutiv","team.e1d":"Përvojë drejtuese në nivel CEO, nga strategjia te vendimmarrja.","team.e2t":"Financë","team.e2d":"Menaxhim financiar, buxhetim dhe kontroll kostosh për struktura hoteliere.","team.e3t":"Shitje","team.e3d":"Strategji shitjesh dhe rritje të të ardhurave nga mysafirët.","team.e4t":"Logjistikë","team.e4d":"Zinxhir furnizimi dhe operacione të organizuara me efikasitet.","team.e5t":"Operacione","team.e5d":"Standardizim procesesh dhe operacione të përditshme pa pengesa.","team.e6t":"Marketing","team.e6d":"Pozicionim marke dhe komunikim që tërheq mysafirët e duhur.",
       "process.eyebrow":"Si punojmë","process.title":"Një proces i thjeshtë, rezultate të qarta","process.sub":"Nga vlerësimi i parë te standardet që qëndrojnë.",
       "p1.title":"Vlerësojmë","p1.desc":"Auditojmë operacionet dhe përvojën e mysafirëve për të gjetur boshllëqet e vërteta.",
       "p2.title":"Planifikojmë","p2.desc":"Ndërtojmë një plan veprimi të qartë e me përparësi, të përshtatur për strukturën tuaj.",
@@ -302,6 +352,7 @@
       "s4.title":"Client Management","s4.desc":"Guest experience and CRM strategies that build loyalty and bring guests back.",
       "about.eyebrow":"Why Conviva","about.title":"Hands-on expertise, not just advice","about.p1":"Conviva brings hands-on hospitality expertise to hotels across Albania and the wider Balkans. We don't just advise — we work alongside your team, set measurable standards, and stay until the results show.","about.p2":"Our approach blends international best practice with deep knowledge of the local market.",
       "about.stat1":"Years of industry experience","about.stat2":"Markets across the region","about.stat3":"Focus on the guest experience","about.stat4":"Commitment to quality",
+      "nav.team":"Team","team.eyebrow":"Who we are","team.title":"A team of hospitality professionals","team.body":"Conviva is a team of hospitality professionals with backgrounds across Albanian and international companies. We bring hands-on knowledge to every part of the hotel business — from executive leadership to finance, sales, and logistics.","team.e1t":"Executive Leadership","team.e1d":"CEO-level leadership experience, from strategy to decision-making.","team.e2t":"Finance","team.e2d":"Financial management, budgeting, and cost control for hotel operations.","team.e3t":"Sales","team.e3d":"Sales strategy and revenue growth across guest segments.","team.e4t":"Logistics","team.e4d":"Supply chain and operations organized for efficiency.","team.e5t":"Operations","team.e5d":"Process standardization and smooth day-to-day operations.","team.e6t":"Marketing","team.e6d":"Brand positioning and communication that attracts the right guests.",
       "process.eyebrow":"How we work","process.title":"A simple process, clear results","process.sub":"From the first assessment to standards that stick.",
       "p1.title":"Assess","p1.desc":"We audit your operations and guest experience to find the real gaps.",
       "p2.title":"Plan","p2.desc":"We build a clear, prioritized action plan tailored to your property.",
